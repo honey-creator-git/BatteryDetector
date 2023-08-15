@@ -21,6 +21,9 @@ export default class BatteryStatus extends React.Component {
     BatteryManager.updateBatteryLevel(function(info){
       this._subscription = DeviceEventEmitter.addListener('BatteryStatus', this.onBatteryStatus);
       this.setState({batteryLevel: info.level});
+      console.log("Battery Level => ", this.state.batteryLevel);
+      console.log("Info Level => ", info.level);
+      console.log("PlugIn Status => ", info.isPlugged);
       this.setState({charging: info.isPlugged});
     }.bind(this));
   }  
