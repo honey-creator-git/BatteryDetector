@@ -1,7 +1,8 @@
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import BatteryStatus from './BatteryStatus.js';
+import Navigation from './Navigation';
+// import BatteryStatus from './BatteryStatus.js';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -10,8 +11,9 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <SafeAreaProvider>
-        <BatteryStatus />
+      <SafeAreaProvider style={{flex: 1, backgroundColor: 'white'}}>
+        {/* <BatteryStatus /> */}
+        <Navigation />
       </SafeAreaProvider>
     )
   }
