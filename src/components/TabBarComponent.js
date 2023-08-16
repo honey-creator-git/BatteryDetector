@@ -11,8 +11,9 @@ const MyTabBar = ({ navigationState, navigation, position }) => {
         <View style={{
           height: 48,
           backgroundColor: '#F3F4F7',
-          marginVertical: 60,
-          marginHorizontal: 30,
+          marginTop: 60,
+          marginBottom: 40,
+          marginHorizontal: 20,
           paddingLeft: 10,
           paddingRight: 10,
           borderRadius: 100,
