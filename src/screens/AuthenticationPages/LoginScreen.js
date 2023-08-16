@@ -75,7 +75,6 @@ const LoginScreen = (props) => {
                 <View style={styles.orloginWithContainer}>
                     <TouchableOpacity style={styles.orloginWithContainer}>
                         <Image
-                            style={styles.socialImage}
                             source={Images.google_icon}
                             resizeMode='stretch'
                         />

@@ -11,6 +11,9 @@ const HomeScreen = (props) => {
     const handleGoBak = () => {
         props.navigation.goBack();
     }
+    const submitPayment = () => {
+        props.navigation.navigate('Payment');
+    }
     const countries = ["192.173.62.115", "192.155.42.18", "163.18.229.135", "195.125.63.58"]
     return (
         <View style={styles.homeScreenContainer}>
@@ -80,6 +83,7 @@ const styles = StyleSheet.create({
     },
     homeText: {
         fontSize: 24,
+        fontWeight: '500',
         color: '#161B1D'
     },
     selectChargeText: {
