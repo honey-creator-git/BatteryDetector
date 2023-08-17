@@ -1,19 +1,35 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Switch, StyleSheet, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Switch, StyleSheet, Dimensions, DeviceEventEmitter, NativeModules } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import SelectDropdown from 'react-native-select-dropdown';
 import { ProgressBar } from 'react-native-paper';
 import RoundButton from '../components/CustomButton';
 
+var BatteryManager = NativeModules.BatteryManager;
+
 const HomeScreen = (props) => {
-    const [automation, setAutomation] = useState(true)
+    const [automation, setAutomation] = useState(true);
+    const [batteryLevel, setBatteryLevel] = useState(null);
+    const [charging, setCharging] = useState(false);
     const handleGoBak = () => {
         props.navigation.goBack();
     }
     const submitPayment = () => {
         props.navigation.navigate('Payment');
     }
+    const onBatteryStatus = (info) => {
+        setBatteryLevel(info.level);
+        setCharging(info.isPlugged);
+    }
+    useEffect(() => {
+        BatteryManager.updateBatteryLevel(function(info){
+            this._subscription = DeviceEventEmitter.addListener('BatteryStatus', this.onBatteryStatus);
+            setBatteryLevel(info.level);
+            console.log("Battery Level => ", batteryLevel);
+            setCharging(info.isPlugged);
+          }.bind(this));
+    }, []);
     const countries = ["192.173.62.115", "192.155.42.18", "163.18.229.135", "195.125.63.58"]
     return (
         <View style={styles.homeScreenContainer}>
@@ -37,7 +53,7 @@ const HomeScreen = (props) => {
             </View>
             <View style={styles.divider}></View>
             <View style={[styles.batteryStatusHeader, {marginTop: 40}]}>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.batteryTitle}>Battery Status:</Text><Text style={[styles.batteryTitle, {marginLeft: 5}]}>50%</Text></View>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.batteryTitle}>Battery Status:</Text><Text style={[styles.batteryTitle, {marginLeft: 5}]}>{batteryLevel}%</Text></View>
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                     <Text style={styles.automation}>Automation</Text>
                     <Switch
@@ -50,7 +66,7 @@ const HomeScreen = (props) => {
             </View>
             <View>
                 <ProgressBar
-                    progress={0.5}
+                    progress={batteryLevel/100}
                     color={'#59C7EA'}
                     style={styles.batteryProgress}
                 />
