@@ -13,11 +13,6 @@ const SignupScreen = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    // const [selectedIndex, setSelectedIndex] = useState(0);
-    // const handleCheckboxChange = () => {
-    //     if(selectedIndex === 1) setSelectedIndex(0)
-    //     else setSelectedIndex(1)
-    // };
     const submitRegister = () => {
         if (firstName == '') {
             showMessage({
@@ -67,7 +62,7 @@ const SignupScreen = (props) => {
             return;
         }
         // setLoading(true);        
-        props.navigation.navigate("Home");
+        props.navigation.navigate("AddCharge");
 
     }
     return (
@@ -130,20 +125,6 @@ const SignupScreen = (props) => {
                     onChangeText={(text) => {setConfirmPassword(text)}}
                     ref={ref => {}}
                 />
-                {/* <View style={styles.forgotPasswordContainer}>
-                    <Checkbox
-                        id={1}
-                        btnstyles={styles.btnstyles}
-                        btnstylesSelect={styles.btnstylesSelect}
-                        selectedIndex={selectedIndex}
-                        onCheckboxChange={handleCheckboxChange}
-                    />
-                    <TouchableOpacity 
-                        onPress={() => {}}
-                    >
-                        <Text style={styles.forgetTxt}>Forgot password?</Text>
-                    </TouchableOpacity>
-                </View> */}
                 <View style={styles.LoginBtn}>
                     <RoundButton title={'Sign Up'} onPress={() => submitRegister()} />
                 </View>
@@ -209,42 +190,11 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         borderBottomWidth: 0,
         borderBottomColor: 'transparent',
-        // position: 'relative',
-        // bottom: 10,
     },
     inputStyle: {
       fontSize: 14,
       fontFamily: 'Open Sans'
     },
-    // forgotPasswordContainer: {
-    //     width: Dimensions.get('window').width - 50,
-    //     height: 30,
-    //     flexDirection: 'row',
-    //     justifyContent: 'space-between',
-    //     alignItems: 'center',
-    //     paddingLeft: 5,
-    //     paddingRight: 5,
-    // },
-    // forgetTxt: {
-    //   color: '#3BA1DF',
-    //   fontSize: 14,
-    // },
-    // btnstyles: {
-    //     height: 20,
-    //     width: 20,
-    //     marginRight: 8,
-    //     borderWidth: 1,
-    //     borderColor: 'black',
-    //     backgroundColor: 'transparent',
-    //     borderRadius: 3,
-    // },
-    // btnstylesSelect: {
-    //     height: 20,
-    //     width: 20,
-    //     marginRight: 8,
-    //     backgroundColor: '#59C7EA',
-    //     borderRadius: 3,
-    // },
     LoginBtn: {
         width: Dimensions.get('window').width - 50,
         paddingLeft: 5,
