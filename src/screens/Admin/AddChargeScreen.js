@@ -32,7 +32,7 @@ const AddCharge = (props) => {
                         underlineColorAndroid={'transparent'}
                         autoCapitalize={"none"}
                         placeholder='Name'
-                        placeholderTextColor={'white'}
+                        placeholderTextColor={'#97999B'}
                         onChangeText={(text) => {setName(text)}}
                     />
             </View>
@@ -45,7 +45,7 @@ const AddCharge = (props) => {
                         underlineColorAndroid={'transparent'}
                         autoCapitalize={"none"}
                         placeholder='000.000.000.000'
-                        placeholderTextColor={'white'}
+                        placeholderTextColor={'#97999B'}
                         onChangeText={(text) => {setIpAddress(text)}}
                     />
             </View>
@@ -58,7 +58,7 @@ const AddCharge = (props) => {
                         underlineColorAndroid={'transparent'}
                         autoCapitalize={"none"}
                         placeholder='000 : 000'
-                        placeholderTextColor={'white'}
+                        placeholderTextColor={'#97999B'}
                         onChangeText={(text) => {setLatLon(text)}}
                         onPressIn={() => handleLocation()}
                     />
@@ -75,7 +75,9 @@ export default AddCharge;
 const styles = StyleSheet.create({
     addChargeStyle: {
         width: '100%',
-        marginVertical: 50,
+        height: '100%',
+        paddingVertical: 50,
+        backgroundColor: 'white'
     },
     goBack: {
         width: '100%',
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
     inputName: {
         width: Dimensions.get('window').width - 60,
         height: 48,
-        backgroundColor: 'gray',
+        backgroundColor: '#F5F3F3',
         borderBottomWidth: 0,
         borderBottomColor: 'transparent',
         flexDirection: 'column',
@@ -117,7 +119,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500',
         fontFamily: 'Open Sans',
-        color: 'white'
     },
     saveBtn: {
         width: Dimensions.get('window').width - 60,

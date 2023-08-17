@@ -14,11 +14,11 @@ const MapScreen = (props) => {
         if(charge == 'charged') setCharge('unCharged')
         else setCharge('charged')
     }
-    const handleGoBak = () => {
+    const handleGoBack = () => {
         props.navigation.goBack();
     }
     const viewHistory = () => {
-        console.log("View History !");
+        props.navigation.navigate('History');
     }
     return (
         <KeyboardAwareScrollView
@@ -27,7 +27,7 @@ const MapScreen = (props) => {
         >
             <View style={styles.mapContainer}>
                 <View style={styles.goBack}>
-                    <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleGoBack()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
                 </View>
                 <View style={[styles.mapShowContainerStyle, { marginTop: 20 }]}>
                     <Text style={styles.mapText}>Map</Text>
@@ -42,11 +42,12 @@ const MapScreen = (props) => {
                         <Input
                             defaultValue=''
                             inputContainerStyle={styles.inputUsers}
+                            containerStyle={styles.inputContainerStyle}
                             inputStyle={styles.inputUsersStyle}
                             underlineColorAndroid={'transparent'}
                             autoCapitalize={"none"}
                             placeholder='000000'
-                            placeholderTextColor={'white'}
+                            placeholderTextColor={'#A5A5A5'}
                             onChangeText={(text) => {setUsers(text)}}
                         />
                     </View>
@@ -63,7 +64,9 @@ export default MapScreen;
 const styles = StyleSheet.create({
     mapContainer: {
         width: '100%',
-        marginVertical: 50,
+        height: Dimensions.get('window').height,
+        paddingVertical: 50,
+        backgroundColor: 'white'
     },
     goBack: {
         width: '100%',
@@ -90,7 +93,7 @@ const styles = StyleSheet.create({
         height: 370,
         width: Dimensions.get('window').width - 60,
         alignSelf: 'center',
-        backgroundColor: 'gray',
+        backgroundColor: '#F5F3F3',
         marginVertical: 15,
     },
     chargeContainer: {
@@ -113,7 +116,7 @@ const styles = StyleSheet.create({
     inputUsers: {
         width: 143,
         height: 29,
-        backgroundColor: 'gray',
+        backgroundColor: 'transparent',
         borderBottomWidth: 0,
         borderBottomColor: 'transparent',
         flexDirection: 'column',
@@ -123,13 +126,23 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         paddingLeft: 10,
         paddingRight: 10,
+        paddingTop: 5,
         position: 'relative',
         top: 10,
+    },
+    inputContainerStyle: {
+        width: 143,
+        height: 29,
+        borderWidth: 1,
+        borderColor: '#C0C0C0',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        alignSelf: 'flex-start',
     },
     inputUsersStyle: {
         fontWeight: '400',
         fontSize: 12,
-        color: 'white',
     },
     historyBtn: {
         width: Dimensions.get('window').width - 60,

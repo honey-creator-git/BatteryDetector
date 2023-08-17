@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Text, TouchableOpacity, Switch, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Switch, Image, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import { Input } from 'react-native-elements';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -20,85 +20,87 @@ const PaymentDataScreen = (props) => {
 
     }
     return (
-        <View style={styles.paymentScreenContainer}>
-            <View style={styles.goBack}>
-                <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
-            </View>
-            <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.paymentText}>Payment data</Text></View>
-            <View style={[styles.goBack, {marginTop: 5}]}><Text style={styles.paymentValue}>$1.00</Text></View>
-            <View style={[styles.goBack, {marginTop: 30}]}><Text style={styles.paymentMethodText}>Payment method</Text></View>
-            <View style={[styles.goBack, {marginTop: 15}]}>
-                <View style={styles.paymentItem}>
-                    <Image source={Images.paypal_icon} resizeMode='stretch' />
+        <ScrollView>
+            <View style={styles.paymentScreenContainer}>
+                <View style={styles.goBack}>
+                    <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
                 </View>
-            </View>
-            <View style={[styles.goBack, {marginTop: 40}]}><Text style={styles.paymentMethodText}>Card number</Text></View>
-            <View>
-                <Input
-                    defaultValue=''
-                    inputContainerStyle={styles.inputCardNumber}
-                    inputStyle={styles.inputCardNumberStyle}
-                    underlineColorAndroid={'transparent'}
-                    autoCapitalize={"none"}
-                    placeholder='0000.0000.0000.0000'
-                    placeholderTextColor={'#B7B7B7'}
-                    onChangeText={(text) => {setCardNumber(text)}}
-                />
-            </View>
-            <View style={[styles.goBack, {marginTop: 20}]}>
-                <View style={{width: (Dimensions.get('window').width - 60)/2, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
-                    <Text style={styles.periodText}>Valid until</Text>
+                <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.paymentText}>Payment data</Text></View>
+                <View style={[styles.goBack, {marginTop: 5}]}><Text style={styles.paymentValue}>$1.00</Text></View>
+                <View style={[styles.goBack, {marginTop: 30}]}><Text style={styles.paymentMethodText}>Payment method</Text></View>
+                <View style={[styles.goBack, {marginTop: 15}]}>
+                    <View style={styles.paymentItem}>
+                        <Image source={Images.paypal_icon} resizeMode='stretch' />
+                    </View>
+                </View>
+                <View style={[styles.goBack, {marginTop: 40}]}><Text style={styles.paymentMethodText}>Card number</Text></View>
+                <View>
                     <Input
                         defaultValue=''
-                        inputContainerStyle={styles.inputPeriod}
-                        inputStyle={styles.inputPeriodStyle}
+                        inputContainerStyle={styles.inputCardNumber}
+                        inputStyle={styles.inputCardNumberStyle}
                         underlineColorAndroid={'transparent'}
                         autoCapitalize={"none"}
-                        placeholder='Month / Year'
+                        placeholder='0000.0000.0000.0000'
                         placeholderTextColor={'#B7B7B7'}
-                        onChangeText={(text) => {setValidUntil(text)}}
+                        onChangeText={(text) => {setCardNumber(text)}}
                     />
                 </View>
-                <View style={{width: (Dimensions.get('window').width - 60)/2, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
-                    <Text style={styles.periodText}>CVV</Text>
+                <View style={[styles.goBack, {marginTop: 20}]}>
+                    <View style={{width: (Dimensions.get('window').width - 60)/2, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
+                        <Text style={styles.periodText}>Valid until</Text>
+                        <Input
+                            defaultValue=''
+                            inputContainerStyle={styles.inputPeriod}
+                            inputStyle={styles.inputPeriodStyle}
+                            underlineColorAndroid={'transparent'}
+                            autoCapitalize={"none"}
+                            placeholder='Month / Year'
+                            placeholderTextColor={'#B7B7B7'}
+                            onChangeText={(text) => {setValidUntil(text)}}
+                        />
+                    </View>
+                    <View style={{width: (Dimensions.get('window').width - 60)/2, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start'}}>
+                        <Text style={styles.periodText}>CVV</Text>
+                        <Input
+                            defaultValue=''
+                            secureTextEntry={true}
+                            inputContainerStyle={styles.inputPeriod}
+                            inputStyle={styles.inputPeriodStyle}
+                            underlineColorAndroid={'transparent'}
+                            autoCapitalize={"none"}
+                            placeholder='1234'
+                            placeholderTextColor={'#B7B7B7'}
+                            onChangeText={(text) => {setCVV(text)}}
+                        />
+                    </View>
+                </View>
+                <View style={[styles.goBack, {marginTop: 30}]}>
                     <Input
                         defaultValue=''
-                        secureTextEntry={true}
-                        inputContainerStyle={styles.inputPeriod}
-                        inputStyle={styles.inputPeriodStyle}
+                        inputContainerStyle={styles.inputName}
+                        inputStyle={styles.inputNameStyle}
                         underlineColorAndroid={'transparent'}
                         autoCapitalize={"none"}
-                        placeholder='1234'
+                        placeholder='Your name and Surname'
                         placeholderTextColor={'#B7B7B7'}
-                        onChangeText={(text) => {setCVV(text)}}
+                        onChangeText={(text) => {setName(text)}}
                     />
                 </View>
+                <View style={[styles.goBack, {marginTop: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}]}>
+                    <Text style={styles.saveCardText}>Save card data for future payments</Text>
+                    <Switch
+                        trackColor={'#D7F2FA'}
+                        thumbColor={'#59C7EA'}
+                        value={cardFuture}  
+                        onValueChange ={(cardFuture)=> setCardFuture(cardFuture)}
+                    />
+                </View>
+                <View style={styles.processConfirm}>
+                    <RoundButton title={'Process Confirm'} onPress={() => submitProcessConfirm()} />
+                </View>
             </View>
-            <View style={[styles.goBack, {marginTop: 30}]}>
-                <Input
-                    defaultValue=''
-                    inputContainerStyle={styles.inputName}
-                    inputStyle={styles.inputNameStyle}
-                    underlineColorAndroid={'transparent'}
-                    autoCapitalize={"none"}
-                    placeholder='Your name and Surname'
-                    placeholderTextColor={'#B7B7B7'}
-                    onChangeText={(text) => {setName(text)}}
-                />
-            </View>
-            <View style={[styles.goBack, {marginTop: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}]}>
-                <Text style={styles.saveCardText}>Save card data for future payments</Text>
-                <Switch
-                    trackColor={'#D7F2FA'}
-                    thumbColor={'#59C7EA'}
-                    value={cardFuture}  
-                    onValueChange ={(cardFuture)=> setCardFuture(cardFuture)}
-                />
-            </View>
-            <View style={styles.processConfirm}>
-                <RoundButton title={'Process Confirm'} onPress={() => submitProcessConfirm()} />
-            </View>
-        </View>
+        </ScrollView>
     );
 }
 
@@ -107,7 +109,9 @@ export default PaymentDataScreen;
 const styles = StyleSheet.create({
     paymentScreenContainer: {
         width: '100%',
-        marginVertical: 20,
+        height: Dimensions.get('window').height,
+        paddingVertical: 20,
+        backgroundColor: 'white'
     },
     goBack: {
         width: '100%',
@@ -145,7 +149,7 @@ const styles = StyleSheet.create({
     inputCardNumber: {
         width: Dimensions.get('window').width - 60,
         height: 42,
-        backgroundColor: 'gray',
+        backgroundColor: '#F5F3F3',
         borderBottomWidth: 0,
         borderBottomColor: 'transparent',
         flexDirection: 'column',
@@ -169,7 +173,7 @@ const styles = StyleSheet.create({
     inputPeriod: {
         width: (Dimensions.get('window').width - 60) / 2 - 15,
         height: 42,
-        backgroundColor: 'gray',
+        backgroundColor: '#F5F3F3',
         borderBottomWidth: 0,
         borderBottomColor: 'transparent',
         flexDirection: 'column',
@@ -192,7 +196,7 @@ const styles = StyleSheet.create({
     inputName: {
         width: Dimensions.get('window').width - 60,
         height: 42,
-        backgroundColor: 'gray',
+        backgroundColor: '#F5F3F3',
         borderBottomWidth: 0,
         borderBottomColor: 'transparent',
         flexDirection: 'column',

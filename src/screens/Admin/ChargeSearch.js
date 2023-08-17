@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Switch, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Switch, Image, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft, faPlus, faPen, faTrash, faXmark, faSearch, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { Searchbar } from 'react-native-paper';
@@ -35,59 +35,61 @@ const ChargeSearch = (props) => {
         props.navigation.navigate("AddCharge");
     }
     return (
-        <View style={styles.addChargeContainer}>
-            <View style={styles.goBack}>
-                <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
-                <View style={styles.addChargeBtnGroup}>
-                    <TouchableOpacity onPress={() => handleAddCharge()}><View style={[styles.btnItem, {marginRight: 15}]}><FontAwesomeIcon icon={faPlus} size={15} color={'#000000'} /></View></TouchableOpacity>
-                    <TouchableOpacity><View style={[styles.btnItem, {marginRight: 15}]}><FontAwesomeIcon icon={faPen} size={15} color={'#000000'} /></View></TouchableOpacity>
-                    <TouchableOpacity><View style={styles.btnItem}><FontAwesomeIcon icon={faTrash} size={15} color={'#000000'} /></View></TouchableOpacity>
+        <ScrollView>
+            <View style={styles.addChargeContainer}>
+                <View style={styles.goBack}>
+                    <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
+                    <View style={styles.addChargeBtnGroup}>
+                        <TouchableOpacity onPress={() => handleAddCharge()}><View style={[styles.btnItem, {marginRight: 15}]}><FontAwesomeIcon icon={faPlus} size={15} color={'#000000'} /></View></TouchableOpacity>
+                        <TouchableOpacity><View style={[styles.btnItem, {marginRight: 15}]}><FontAwesomeIcon icon={faPen} size={15} color={'#000000'} /></View></TouchableOpacity>
+                        <TouchableOpacity><View style={styles.btnItem}><FontAwesomeIcon icon={faTrash} size={15} color={'#000000'} /></View></TouchableOpacity>
+                    </View>
+                </View>
+                <View style={[styles.goBack, {marginTop: 20}]}><Text style={styles.chargePlacesText}>Charge places</Text></View>
+                <View style={styles.chargeSearch}>
+                    <Searchbar
+                        placeholder="Search"
+                        onChangeText={chargeSearch => handleSearch(chargeSearch)}
+                        value={chargeSearch}
+                        icon={() => <FontAwesomeIcon icon={faSearch} size={15} color={'#BDBDBD'} />}
+                        clearIcon={() => <FontAwesomeIcon icon={faCircleXmark} size={15} color={'#BDBDBD'} />}
+                        onClearIconPress={() => handleClear()}
+                        style={styles.searchContainer}
+                    />
+                </View>
+                <View style={styles.chargeList}>
+                    {
+                        searchedArray.length === 0 ? charges.map(((charge, index) => {
+                            return (
+                                <View key={index} style={styles.chargeListItem}>
+                                    <View style={styles.chargeItemStyle}>
+                                        <Text style={[styles.chargeItemText, {marginRight: 40}]}>{index + 1}.</Text>
+                                        <Text style={styles.chargeItemText}>{charge.chargeNumber}</Text>
+                                        <Text style={[styles.chargeItemText, {marginHorizontal: 10}]}>/</Text>
+                                        <Text style={styles.chargeItemText}>{charge.chargeCountry}</Text>
+                                    </View>
+                                    <View style={styles.divider}></View>
+                                </View>
+                            )
+                        }))
+                        :
+                        searchedArray.map(((charge, index) => {
+                            return (
+                                <View key={index} style={styles.chargeListItem}>
+                                    <View style={styles.chargeItemStyle}>
+                                        <Text style={[styles.chargeItemText, {marginRight: 40}]}>{index + 1}.</Text>
+                                        <Text style={styles.chargeItemText}>{charge.chargeNumber}</Text>
+                                        <Text style={[styles.chargeItemText, {marginHorizontal: 10}]}>/</Text>
+                                        <Text style={styles.chargeItemText}>{charge.chargeCountry}</Text>
+                                    </View>
+                                    <View style={styles.divider}></View>
+                                </View>
+                            )
+                        }))
+                    }
                 </View>
             </View>
-            <View style={[styles.goBack, {marginTop: 20}]}><Text style={styles.chargePlacesText}>Charge places</Text></View>
-            <View style={styles.chargeSearch}>
-                <Searchbar
-                    placeholder="Search"
-                    onChangeText={chargeSearch => handleSearch(chargeSearch)}
-                    value={chargeSearch}
-                    icon={() => <FontAwesomeIcon icon={faSearch} size={15} color={'#BDBDBD'} />}
-                    clearIcon={() => <FontAwesomeIcon icon={faCircleXmark} size={15} color={'#BDBDBD'} />}
-                    onClearIconPress={() => handleClear()}
-                    style={styles.searchContainer}
-                />
-            </View>
-            <View style={styles.chargeList}>
-                {
-                    searchedArray.length === 0 ? charges.map(((charge, index) => {
-                        return (
-                            <View key={index} style={styles.chargeListItem}>
-                                <View style={styles.chargeItemStyle}>
-                                    <Text style={[styles.chargeItemText, {marginRight: 40}]}>{index + 1}.</Text>
-                                    <Text style={styles.chargeItemText}>{charge.chargeNumber}</Text>
-                                    <Text style={[styles.chargeItemText, {marginHorizontal: 10}]}>/</Text>
-                                    <Text style={styles.chargeItemText}>{charge.chargeCountry}</Text>
-                                </View>
-                                <View style={styles.divider}></View>
-                            </View>
-                        )
-                    }))
-                    :
-                    searchedArray.map(((charge, index) => {
-                        return (
-                            <View key={index} style={styles.chargeListItem}>
-                                <View style={styles.chargeItemStyle}>
-                                    <Text style={[styles.chargeItemText, {marginRight: 40}]}>{index + 1}.</Text>
-                                    <Text style={styles.chargeItemText}>{charge.chargeNumber}</Text>
-                                    <Text style={[styles.chargeItemText, {marginHorizontal: 10}]}>/</Text>
-                                    <Text style={styles.chargeItemText}>{charge.chargeCountry}</Text>
-                                </View>
-                                <View style={styles.divider}></View>
-                            </View>
-                        )
-                    }))
-                }
-            </View>
-        </View>
+        </ScrollView>
     );
 }
 
@@ -96,7 +98,9 @@ export default ChargeSearch;
 const styles = StyleSheet.create({
     addChargeContainer: {
         width: '100%',
-        marginVertical: 50,
+        height: Dimensions.get('window').height,
+        paddingVertical: 50,
+        backgroundColor: 'white'
     },
     goBack: {
         width: '100%',

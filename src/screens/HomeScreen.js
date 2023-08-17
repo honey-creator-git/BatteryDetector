@@ -32,7 +32,7 @@ const HomeScreen = (props) => {
                     onSelect={(selectedItem, index) => {console.log(selectedItem, index)}}
                     buttonTextAfterSelection={(selectedItem, index) => {return selectedItem}}
                     rowTextForSelection={(item, index) => {return item}}
-                    renderDropdownIcon={() => <FontAwesomeIcon icon={faCaretDown} size={15} style={{color: 'white'}} />}
+                    renderDropdownIcon={() => <FontAwesomeIcon icon={faCaretDown} size={15} style={{color: '#B7B7B7'}} />}
                 />
             </View>
             <View style={styles.divider}></View>
@@ -71,7 +71,9 @@ export default HomeScreen;
 const styles = StyleSheet.create({
     homeScreenContainer: {
         width: '100%',
-        marginVertical: 20,
+        height: '100%',
+        paddingVertical: 20,
+        backgroundColor: 'white'
     },
     goBack: {
         width: '100%',
@@ -93,14 +95,14 @@ const styles = StyleSheet.create({
     buttonStyle: {
         width: Dimensions.get('window').width - 60,
         height: 42,
-        backgroundColor: 'gray',
+        backgroundColor: '#F5F3F3',
         borderRadius: 3,
         paddingLeft: 20,
         paddingRight: 20,
     },
     buttonTextStyle: {
         fontSize: 14,
-        color: 'white',
+        color: '#B7B7B7',
     },
     dropdownStyle: {
         backgroundColor: 'green',
