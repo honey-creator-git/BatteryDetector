@@ -11,7 +11,7 @@ const CardInfoScreen = (props) => {
     const handleGoBak = () => {
         props.navigation.goBack();
     }
-    const submitProcessConfirm = () => {
+    const submitPayWithCard = () => {
         props.navigation.navigate("ConnectoinState");
     }
     return (
@@ -50,7 +50,7 @@ const CardInfoScreen = (props) => {
                     onSubmitEditing={() => {}}
                 />
                 <View style={styles.processConfirm}>
-                    <RoundButton title={'Pay'} onPress={() => submitProcessConfirm()} />
+                    <RoundButton title={'Pay'} onPress={() => submitPayWithCard()} />
                 </View>
             </View>
         </ScrollView>
