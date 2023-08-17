@@ -23,7 +23,7 @@ const LoginScreen = (props) => {
             return;
         } else {
             // setLoading(true);
-            props.navigation.navigate("ChargeSearch");
+            props.navigation.navigate("Home");
         }
     }
     return (

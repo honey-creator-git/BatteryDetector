@@ -17,7 +17,7 @@ const PaymentDataScreen = (props) => {
         props.navigation.goBack();
     }
     const submitProcessConfirm = () => {
-
+        props.navigation.navigate('CardInfo');
     }
     return (
         <ScrollView>
@@ -97,7 +97,7 @@ const PaymentDataScreen = (props) => {
                     />
                 </View>
                 <View style={styles.processConfirm}>
-                    <RoundButton title={'Process Confirm'} onPress={() => submitProcessConfirm()} />
+                    <RoundButton title={'Proceed to Confirm'} onPress={() => submitProcessConfirm()} />
                 </View>
             </View>
         </ScrollView>

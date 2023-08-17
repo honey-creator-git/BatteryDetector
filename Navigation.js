@@ -11,6 +11,7 @@ import ChargeSearch from './src/screens/Admin/ChargeSearch';
 import AddCharge from './src/screens/Admin/AddChargeScreen';
 import MapScreen from './src/screens/Admin/MapScreen';
 import HistoryScreen from './src/screens/Admin/HistoryScreen';
+import CardInfoScreen from './src/screens/CardInfoScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,7 +27,8 @@ const Navigation = () => {
                 <Stack.Screen name="Authentication" component={AuthenticationScreen} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
                 <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
                 <Stack.Screen name="Payment" component={PaymentDataScreen} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
-            
+                <Stack.Screen name="CardInfo" component={CardInfoScreen} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
+
                 <Stack.Screen name="ChargeSearch" component={ChargeSearch} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
                 <Stack.Screen name="AddCharge" component={AddCharge} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
                 <Stack.Screen name="Map" component={MapScreen} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
