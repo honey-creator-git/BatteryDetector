@@ -110,6 +110,13 @@ const styles = StyleSheet.create({
     rowStyle: {
         backgroundColor: '#F3F4F7'
     },
+    divider: {
+        width: Dimensions.get('window').width - 60,
+        borderWidth: 1,
+        borderColor: '#DCDFE7',
+        marginVertical: 30,
+        alignSelf: 'center'
+    },
     batteryStatusHeader: {
         width: Dimensions.get('window').width - 60,
         alignSelf: 'center',

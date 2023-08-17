@@ -21,6 +21,7 @@
     "react-native-battery": "^0.1.18",
     "react-native-elements": "^3.4.3",
     "react-native-flash-message": "^0.4.2",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-pager-view": "^6.2.0",
     "react-native-paper": "^5.10.1",
     "react-native-reanimated": "^3.4.2",
