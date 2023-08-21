@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { View, Text, TouchableOpacity, Switch, Image, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft, faPlus, faPen, faTrash, faXmark, faSearch, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
@@ -7,32 +8,40 @@ import { Searchbar } from 'react-native-paper';
 const ChargeSearch = (props) => {
     const [chargeSearch, setChargeSearch] = useState('');
     const [searchedArray, setSearchedArray] = useState([]);
-    var charges = [
-        {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},
-        {chargeNumber: '192.155.42.18', chargeCountry: 'United States'},
-        {chargeNumber: '163.18.229.135', chargeCountry: 'South Africa'},
-        {chargeNumber: '194.124.77.182', chargeCountry: 'Thailand'},
-        {chargeNumber: '195.125.63.58', chargeCountry: 'United Kingdom'},
-        {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},
-        {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},
-        {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},
-        {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},
-        {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},        
-    ];
+    const charges = useSelector((state) => state.charge["charges"])
+    // var charges = [
+    //     {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},
+    //     {chargeNumber: '192.155.42.18', chargeCountry: 'United States'},
+    //     {chargeNumber: '163.18.229.135', chargeCountry: 'South Africa'},
+    //     {chargeNumber: '194.124.77.182', chargeCountry: 'Thailand'},
+    //     {chargeNumber: '195.125.63.58', chargeCountry: 'United Kingdom'},
+    //     {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},
+    //     {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},
+    //     {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},
+    //     {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},
+    //     {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},        
+    // ];
     const handleGoBak = () => {
         props.navigation.goBack();
     }
     const handleSearch = (chargeSearch) => {
         setChargeSearch(chargeSearch);
-        const searchFilter = charges.filter((charge) => charge.chargeNumber.includes(chargeSearch) || charge.chargeCountry.includes(chargeSearch))
-        setSearchedArray(searchFilter);
+        const searchFilter = charges.filter((charge) => charge["ip"].includes(chargeSearch) || charge["country"].includes(chargeSearch))
+        if (searchFilter.length == 0) {
+            setSearchedArray(null);
+        } else {
+            setSearchedArray(searchFilter)
+        }
     }
     const handleClear = () => {
         setChargeSearch('');
         setSearchedArray([]);
     }
     const handleAddCharge = () => {
-        props.navigation.navigate("AddCharge");
+        props.navigation.navigate("AddCharge", { chargeName: "", chargeIp: "", chargeLatLon: "", edit: false });
+    }
+    const handleChargeEdit = (charge) => {
+        props.navigation.navigate("AddCharge", { chargeId: charge["id"], chargeName: charge["name"], chargeIp: charge["ip"], chargeLatLon: charge["latlon"], edit: true });
     }
     return (
         <ScrollView>
@@ -59,31 +68,38 @@ const ChargeSearch = (props) => {
                 </View>
                 <View style={styles.chargeList}>
                     {
-                        searchedArray.length === 0 ? charges.map(((charge, index) => {
+                        chargeSearch === "" ? charges.map(((charge, index) => {
                             return (
-                                <View key={index} style={styles.chargeListItem}>
-                                    <View style={styles.chargeItemStyle}>
-                                        <Text style={[styles.chargeItemText, {marginRight: 40}]}>{index + 1}.</Text>
-                                        <Text style={styles.chargeItemText}>{charge.chargeNumber}</Text>
-                                        <Text style={[styles.chargeItemText, {marginHorizontal: 10}]}>/</Text>
-                                        <Text style={styles.chargeItemText}>{charge.chargeCountry}</Text>
+                                <TouchableOpacity key={index} onPress={() => handleChargeEdit(charge)} style={styles.chargeListItem}>
+                                    <View>
+                                        <View style={styles.chargeItemStyle}>
+                                            <Text style={[styles.chargeItemText, {marginRight: 40}]}>{index + 1}.</Text>
+                                            <Text style={styles.chargeItemText}>{charge["ip"]}</Text>
+                                            <Text style={[styles.chargeItemText, {marginHorizontal: 10}]}>/</Text>
+                                            <Text style={styles.chargeItemText}>{charge["country"]}</Text>
+                                        </View>
+                                        <View style={styles.divider}></View>
                                     </View>
-                                    <View style={styles.divider}></View>
-                                </View>
+                                </TouchableOpacity>
                             )
                         }))
                         :
+                        (searchedArray === null && chargeSearch !== "") ?
+                        <View></View>
+                        :
                         searchedArray.map(((charge, index) => {
                             return (
-                                <View key={index} style={styles.chargeListItem}>
-                                    <View style={styles.chargeItemStyle}>
-                                        <Text style={[styles.chargeItemText, {marginRight: 40}]}>{index + 1}.</Text>
-                                        <Text style={styles.chargeItemText}>{charge.chargeNumber}</Text>
-                                        <Text style={[styles.chargeItemText, {marginHorizontal: 10}]}>/</Text>
-                                        <Text style={styles.chargeItemText}>{charge.chargeCountry}</Text>
+                                <TouchableOpacity key={index} onPress={() => handleChargeEdit(charge)} style={styles.chargeListItem}>
+                                    <View>
+                                        <View style={styles.chargeItemStyle}>
+                                            <Text style={[styles.chargeItemText, {marginRight: 40}]}>{index + 1}.</Text>
+                                            <Text style={styles.chargeItemText}>{charge["ip"]}</Text>
+                                            <Text style={[styles.chargeItemText, {marginHorizontal: 10}]}>/</Text>
+                                            <Text style={styles.chargeItemText}>{charge["country"]}</Text>
+                                        </View>
+                                        <View style={styles.divider}></View>
                                     </View>
-                                    <View style={styles.divider}></View>
-                                </View>
+                                </TouchableOpacity>
                             )
                         }))
                     }

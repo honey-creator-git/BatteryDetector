@@ -1,72 +1,119 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { View, Text, TouchableOpacity, Switch, Image, StyleSheet, Dimensions } from 'react-native';
 import { Input } from 'react-native-elements';
 import RoundButton from '../../components/CustomButton';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { chargeActions } from '../../../redux/actions/chargeActions';
 
 const AddCharge = (props) => {
+    const dispatch = useDispatch();
+    const token = useSelector((state) => state.user["token"]);
     const [name, setName] = useState('');
     const [ipAddress, setIpAddress] = useState('');
     const [latLon, setLatLon] = useState('');
+    const [edit, setEdit] = useState(false);
+    const [chargeId, setChargeId] = useState('');
     const handleGoBak = () => {
         props.navigation.goBack()
     }
     const saveCharge = () => {
-        console.log("Charge was saved !!!");
+        if(edit == false) {
+            dispatch(chargeActions.addNewCharge(name, ipAddress, latLon, token, props.navigation));
+        } else if (edit == true) {
+            dispatch(chargeActions.updateChargeWithNameIpLocation(chargeId, name, ipAddress, latLon, token, props.navigation));
+        }
     }
     const handleLocation = () => {
-        props.navigation.navigate('Map');
+        if (latLon != "") {
+            const latlon = latLon.split(":");
+            const latitude = latlon[0];
+            const longitude = latlon[1];
+            props.navigation.navigate('Map', { location: { latitude: parseFloat(latitude), longitude: parseFloat(longitude) }, back: "ChargeSearch" });
+        } else {
+            props.navigation.navigate('Map', { location: { latitude: 37.78825, longitude: -122.4324 }, back: "ChargeSearch" });
+        }
     }
+    useEffect(() => {
+        const chargeName = props.route.params.chargeName;
+        setName(chargeName);
+        const chargeIp = props.route.params.chargeIp;
+        setIpAddress(chargeIp);
+        const chargelatLon = props.route.params.chargeLatLon;
+        setLatLon(chargelatLon);
+        const chargeEdit = props.route.params.edit;
+        setEdit(chargeEdit);
+        if(chargeEdit == true) {
+            selectedChargeId = props.route.params.chargeId;
+            setChargeId(selectedChargeId);
+        }
+        if(!!props.route.params.update) {
+            if(props.route.params.update == "success") {
+                alert("Charge has been updated successfully!");
+            }
+        }
+    }, [props.route.params])
     return (
-        <View style={styles.addChargeStyle}>
-            <View style={styles.goBack}>
-                <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
+        <KeyboardAwareScrollView
+            keyboardShouldPersistTaps='always'
+            style={{ flex:1 }}  
+        >
+            <View style={styles.addChargeStyle}>
+                <View style={styles.goBack}>
+                    <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
+                </View>
+                <View style={[styles.chargeAddItemStyle, { marginTop: 20 }]}>
+                        <Text style={styles.nameText}>Name</Text>
+                        <Input
+                            defaultValue={name}
+                            inputContainerStyle={styles.inputName}
+                            inputStyle={styles.inputNameStyle}
+                            underlineColorAndroid={'transparent'}
+                            autoCapitalize={"none"}
+                            placeholder='Name'
+                            placeholderTextColor={'#97999B'}
+                            onChangeText={(text) => {setName(text)}}
+                        />
+                </View>
+                <View style={[styles.chargeAddItemStyle, { marginTop: 30 }]}>
+                        <Text style={styles.nameText}>IP Address</Text>
+                        <Input
+                            defaultValue={ipAddress}
+                            inputContainerStyle={styles.inputName}
+                            inputStyle={styles.inputNameStyle}
+                            underlineColorAndroid={'transparent'}
+                            autoCapitalize={"none"}
+                            placeholder='000.000.000.000'
+                            placeholderTextColor={'#97999B'}
+                            onChangeText={(text) => {setIpAddress(text)}}
+                        />
+                </View>
+                <View style={[styles.chargeAddItemStyle, { marginTop: 30 }]}>
+                        <Text style={styles.nameText}>Lat , Lon</Text>
+                        <Input
+                            defaultValue={latLon}
+                            inputContainerStyle={styles.inputName}
+                            inputStyle={styles.inputNameStyle}
+                            underlineColorAndroid={'transparent'}
+                            autoCapitalize={"none"}
+                            placeholder='000 : 000'
+                            placeholderTextColor={'#97999B'}
+                            onChangeText={(text) => {setLatLon(text)}}
+                            onPressIn={() => edit == true && handleLocation()}
+                        />
+                </View>
+                <View style={styles.saveBtn}>
+                {
+                    edit == true ?
+                    <RoundButton title={'Edit'} onPress={() => saveCharge()} />
+                    :
+                    <RoundButton title={'Save'} onPress={() => saveCharge()} />
+                }
+                </View>
             </View>
-            <View style={[styles.chargeAddItemStyle, { marginTop: 20 }]}>
-                    <Text style={styles.nameText}>Name</Text>
-                    <Input
-                        defaultValue=''
-                        inputContainerStyle={styles.inputName}
-                        inputStyle={styles.inputNameStyle}
-                        underlineColorAndroid={'transparent'}
-                        autoCapitalize={"none"}
-                        placeholder='Name'
-                        placeholderTextColor={'#97999B'}
-                        onChangeText={(text) => {setName(text)}}
-                    />
-            </View>
-            <View style={[styles.chargeAddItemStyle, { marginTop: 30 }]}>
-                    <Text style={styles.nameText}>IP Address</Text>
-                    <Input
-                        defaultValue=''
-                        inputContainerStyle={styles.inputName}
-                        inputStyle={styles.inputNameStyle}
-                        underlineColorAndroid={'transparent'}
-                        autoCapitalize={"none"}
-                        placeholder='000.000.000.000'
-                        placeholderTextColor={'#97999B'}
-                        onChangeText={(text) => {setIpAddress(text)}}
-                    />
-            </View>
-            <View style={[styles.chargeAddItemStyle, { marginTop: 30 }]}>
-                    <Text style={styles.nameText}>Lat , Lon</Text>
-                    <Input
-                        defaultValue=''
-                        inputContainerStyle={styles.inputName}
-                        inputStyle={styles.inputNameStyle}
-                        underlineColorAndroid={'transparent'}
-                        autoCapitalize={"none"}
-                        placeholder='000 : 000'
-                        placeholderTextColor={'#97999B'}
-                        onChangeText={(text) => {setLatLon(text)}}
-                        onPressIn={() => handleLocation()}
-                    />
-            </View>
-            <View style={styles.saveBtn}>
-                <RoundButton title={'Save'} onPress={() => saveCharge()} />
-            </View>
-        </View>
+        </KeyboardAwareScrollView>
     )
 }
 
@@ -75,7 +122,7 @@ export default AddCharge;
 const styles = StyleSheet.create({
     addChargeStyle: {
         width: '100%',
-        height: '100%',
+        height: Dimensions.get("window").height,
         paddingVertical: 50,
         backgroundColor: 'white'
     },

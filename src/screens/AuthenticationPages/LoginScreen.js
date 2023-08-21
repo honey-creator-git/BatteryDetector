@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image } from 'react-native';
 import { Input, CheckBox } from 'react-native-elements';
 import { showMessage } from "react-native-flash-message";
 import Checkbox from '../../components/CustomCheckBox';
 import RoundButton from '../../components/CustomButton';
 import Images from '../../assets/Images';
+import { userActions } from '../../../redux/actions/userActions';
 
 const LoginScreen = (props) => {
+    const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -15,6 +18,21 @@ const LoginScreen = (props) => {
         if(selectedIndex === 1) setSelectedIndex(0)
         else setSelectedIndex(1)
     };
+    useEffect(() => {
+        if (props.route.params) {
+          const error = props.route.params.err;
+          if (error == "invalid") {
+            showMessage({
+              message: "UserName or Password is incorrect."
+            });
+          } else if (error == "token is expired") {
+            showMessage({
+              message: "User Token has been expired."
+            });
+          }
+        }
+    }, [props.route.params])
+
     const submitLogin = () => {
         if(email === '' || password === '') {
             showMessage({
@@ -23,7 +41,7 @@ const LoginScreen = (props) => {
             return;
         } else {
             // setLoading(true);
-            props.navigation.navigate("Home");
+            dispatch(userActions.login(email, password, props.navigation));
         }
     }
     return (

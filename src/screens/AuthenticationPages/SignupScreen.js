@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image } from 'react-native';
 import { Input, CheckBox } from 'react-native-elements';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { showMessage } from "react-native-flash-message";
 import Checkbox from '../../components/CustomCheckBox';
 import RoundButton from '../../components/CustomButton';
 import Images from '../../assets/Images';
+import { userActions } from '../../../redux/actions/userActions';
 
 const SignupScreen = (props) => {
+    const dispatch = useDispatch();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (props.route.params) {
+          const error = props.route.params.err;
+          if (error) {
+            showMessage({
+              message: "Email has already been taken."
+            });
+          }
+        }
+    }, [props.route.params])
+
     const submitRegister = () => {
         if (firstName == '') {
             showMessage({
@@ -62,84 +78,88 @@ const SignupScreen = (props) => {
             return;
         }
         // setLoading(true);        
-        props.navigation.navigate("AddCharge");
-
+        dispatch(userActions.register(firstName, lastName, email, password, props.navigation));
     }
     return (
-        <View style={styles.loginContainer}>
-            <View style={styles.loginTitle}>
-                <Text style={styles.loginText}>Sign Up 👋</Text>
-            </View>
-            <View style={styles.inputContainer}>
-                <Input
-                    defaultValue=''
-                    inputContainerStyle={styles.inputContainerStyle}
-                    inputStyle={styles.inputStyle}
-                    underlineColorAndroid={'transparent'}
-                    autoCapitalize={"none"}
-                    placeholder='First Name'
-                    placeholderTextColor={'#97999B'}
-                    onChangeText={(text) => {setFirstName(text)}}
-                />
-                <Input
-                    defaultValue=''
-                    inputContainerStyle={styles.inputContainerStyle}
-                    inputStyle={styles.inputStyle}
-                    underlineColorAndroid={'transparent'}
-                    autoCapitalize={"none"}
-                    placeholder='Last Name'
-                    placeholderTextColor={'#97999B'}
-                    onChangeText={(text) => {setLastName(text)}}
-                />
-                <Input
-                    defaultValue=''
-                    inputContainerStyle={styles.inputContainerStyle}
-                    inputStyle={styles.inputStyle}
-                    underlineColorAndroid={'transparent'}
-                    autoCapitalize={"none"}
-                    keyboardType={'email-address'}
-                    placeholder='Email'
-                    placeholderTextColor={'#97999B'}
-                    onChangeText={(text) => {setEmail(text)}}
-                    onSubmitEditing={() => {}}
-                />
-                <Input
-                    defaultValue=''
-                    secureTextEntry={true}
-                    containerStyle={{width: '100%'}}
-                    inputContainerStyle={styles.inputContainerStylePassword}
-                    inputStyle={styles.inputStyle}
-                    placeholder='Password'
-                    placeholderTextColor={'#97999B'}
-                    onChangeText={(text) => {setPassword(text)}}
-                    ref={ref => {}}
-                />                
-                <Input
-                    defaultValue=''
-                    secureTextEntry={true}
-                    containerStyle={{width: '100%'}}
-                    inputContainerStyle={styles.inputContainerStylePassword}
-                    inputStyle={styles.inputStyle}
-                    placeholder='Confirm Password'
-                    placeholderTextColor={'#97999B'}
-                    onChangeText={(text) => {setConfirmPassword(text)}}
-                    ref={ref => {}}
-                />
-                <View style={styles.LoginBtn}>
-                    <RoundButton title={'Sign Up'} onPress={() => submitRegister()} />
+        <KeyboardAwareScrollView
+            keyboardShouldPersistTaps='always'
+            style={{ flex:1 }}  
+        >
+            <View style={styles.loginContainer}>
+                <View style={styles.loginTitle}>
+                    <Text style={styles.loginText}>Sign Up 👋</Text>
                 </View>
-                <View style={styles.orloginWithContainer}>
-                    <TouchableOpacity style={styles.orloginWithContainer}>
-                        <Image
-                            style={styles.socialImage}
-                            source={Images.google_icon}
-                            resizeMode='stretch'
-                        />
-                        <View style={{marginLeft: 10}}><Text style={styles.socialLoginText}>Login with Google</Text></View>
-                    </TouchableOpacity>
+                <View style={styles.inputContainer}>
+                    <Input
+                        defaultValue=''
+                        inputContainerStyle={styles.inputContainerStyle}
+                        inputStyle={styles.inputStyle}
+                        underlineColorAndroid={'transparent'}
+                        autoCapitalize={"none"}
+                        placeholder='First Name'
+                        placeholderTextColor={'#97999B'}
+                        onChangeText={(text) => {setFirstName(text)}}
+                    />
+                    <Input
+                        defaultValue=''
+                        inputContainerStyle={styles.inputContainerStyle}
+                        inputStyle={styles.inputStyle}
+                        underlineColorAndroid={'transparent'}
+                        autoCapitalize={"none"}
+                        placeholder='Last Name'
+                        placeholderTextColor={'#97999B'}
+                        onChangeText={(text) => {setLastName(text)}}
+                    />
+                    <Input
+                        defaultValue=''
+                        inputContainerStyle={styles.inputContainerStyle}
+                        inputStyle={styles.inputStyle}
+                        underlineColorAndroid={'transparent'}
+                        autoCapitalize={"none"}
+                        keyboardType={'email-address'}
+                        placeholder='Email'
+                        placeholderTextColor={'#97999B'}
+                        onChangeText={(text) => {setEmail(text)}}
+                        onSubmitEditing={() => {}}
+                    />
+                    <Input
+                        defaultValue=''
+                        secureTextEntry={true}
+                        containerStyle={{width: '100%'}}
+                        inputContainerStyle={styles.inputContainerStylePassword}
+                        inputStyle={styles.inputStyle}
+                        placeholder='Password'
+                        placeholderTextColor={'#97999B'}
+                        onChangeText={(text) => {setPassword(text)}}
+                        ref={ref => {}}
+                    />                
+                    <Input
+                        defaultValue=''
+                        secureTextEntry={true}
+                        containerStyle={{width: '100%'}}
+                        inputContainerStyle={styles.inputContainerStylePassword}
+                        inputStyle={styles.inputStyle}
+                        placeholder='Confirm Password'
+                        placeholderTextColor={'#97999B'}
+                        onChangeText={(text) => {setConfirmPassword(text)}}
+                        ref={ref => {}}
+                    />
+                    <View style={styles.LoginBtn}>
+                        <RoundButton title={'Sign Up'} onPress={() => submitRegister()} />
+                    </View>
+                    <View style={styles.orloginWithContainer}>
+                        <TouchableOpacity style={styles.orloginWithContainer}>
+                            <Image
+                                style={styles.socialImage}
+                                source={Images.google_icon}
+                                resizeMode='stretch'
+                            />
+                            <View style={{marginLeft: 10}}><Text style={styles.socialLoginText}>Login with Google</Text></View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
-        </View>
+        </KeyboardAwareScrollView>
     )
 }
 

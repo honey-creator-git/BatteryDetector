@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { useDispatch } from 'react-redux';
 import { View, Text, TouchableOpacity, Switch, Image, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import { Input } from 'react-native-elements';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -6,13 +7,15 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { ProgressBar } from 'react-native-paper';
 import RoundButton from '../components/CustomButton';
 import Images from '../assets/Images';
+import { userActions } from '../../redux/actions/userActions';
 
 const ConnectionStateScreen = (props) => {
+    const dispatch = useDispatch();
     const handleGoBak = () => {
         props.navigation.goBack();
     }
     const handleConnectionConfirm = () => {
-        console.log("Connection Confirmed !");
+        dispatch(userActions.logout(props.navigation));
     }
     return (
         <ScrollView>

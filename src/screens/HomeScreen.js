@@ -1,84 +1,245 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Switch, StyleSheet, Dimensions, DeviceEventEmitter, NativeModules } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { View, Text, TouchableOpacity, Switch, ScrollView, StyleSheet, Dimensions, DeviceEventEmitter, NativeModules, Modal, ActivityIndicator } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import SelectDropdown from 'react-native-select-dropdown';
-import { ProgressBar } from 'react-native-paper';
+import { ProgressBar, RadioButton } from 'react-native-paper';
+import { WebView } from 'react-native-webview';
+import Feather from 'react-native-vector-icons/Feather';
 import RoundButton from '../components/CustomButton';
+import { chargeActions } from '../../redux/actions/chargeActions';
 
 var BatteryManager = NativeModules.BatteryManager;
 
 const HomeScreen = (props) => {
-    const [automation, setAutomation] = useState(true);
+    const dispatch = useDispatch();
+    const [automation, setAutomation] = useState(false);
     const [batteryLevel, setBatteryLevel] = useState(null);
     const [charging, setCharging] = useState(false);
+    const [showGateway, setShowGateway] = useState(false);
+    const [prog, setProg] = useState(false);
+    const [progClr, setProgClr] = useState("#000");
+    const [chargeItems, setChargeItems] = useState([]);
+    const [selectedCharge, setSelectedCharge] = useState(null);
+    const [normalCharge, setNormalCharge] = useState(true);
+    const [fastCharge, setFastCharge] = useState(false);
+    const charges = useSelector((state) => state.charge["charges"]);
+    const token = useSelector((state) => state.user["token"]);
+    const currentUser = useSelector((state) => state.user["user"]);
+
     const handleGoBak = () => {
         props.navigation.goBack();
     }
     const submitPayment = () => {
-        props.navigation.navigate('Payment');
+        // props.navigation.navigate('Payment');
+        if (selectedCharge === null) {
+            alert("Please select a charge.");
+        } else  {
+            setShowGateway(true)
+        }
+    }
+    const handleChargeSelect = (selectItem) => {
+        setSelectedCharge(selectItem);
+        const updateCharge = charges.filter((item, index) => item["ip"] == selectItem);
+        const updateChargeId = updateCharge[0]["id"];
+        var date = new Date().getDate(); //Current Date
+        var month = new Date().getMonth() + 1; //Current Month
+        var year = new Date().getFullYear(); //Current Year
+        var hours = new Date().getHours(); //Current Hours
+        var min = new Date().getMinutes(); //Current Minutes
+        const touchedAt = year + "/" + month + "/" + date + " " + hours + ":" + min;
+        
+        const userInfo = {
+            "firstName" : currentUser["firstName"],
+            "lastName" : currentUser["lastName"],
+            "touchedAt" : touchedAt
+        }
+        var batteryUsers = [userInfo];
+        if (updateCharge[0]["batteryUsers"] != null) {
+            const checkExists = updateCharge[0]["batteryUsers"].filter((item) => item["firstName"] == userInfo["firstName"]);
+            if(checkExists.length == 0) {
+                batteryUsers = updateCharge[0]["batteryUsers"].concat(batteryUsers)
+                dispatch(chargeActions.updateChargeForBatteryUsers(updateChargeId, batteryUsers, token));
+            }            
+        } else {
+            dispatch(chargeActions.updateChargeForBatteryUsers(updateChargeId, batteryUsers, token));
+        }
+        if (batteryLevel === 100) {
+            props.navigation.navigate("ConnectoinState");
+        }
     }
     const onBatteryStatus = (info) => {
         setBatteryLevel(info.level);
         setCharging(info.isPlugged);
+
+        if(info.level == 100 && selectedCharge !== null) {
+            props.navigation.navigate("ConnectoinState");
+        }
+    }
+    const handleAutomation = (prop) => {
+        setAutomation(prop);
+        if (prop == true && batteryLevel === 100) {
+            props.navigation.navigate("ConnectoinState");
+        }
+        if (prop == true && selectedCharge !== null) {
+            setShowGateway(true);
+        }
     }
     useEffect(() => {
         BatteryManager.updateBatteryLevel(function(info){
-            this._subscription = DeviceEventEmitter.addListener('BatteryStatus', this.onBatteryStatus);
+            this._subscription = DeviceEventEmitter.addListener('BatteryStatus', onBatteryStatus(info));
             setBatteryLevel(info.level);
-            console.log("Battery Level => ", batteryLevel);
             setCharging(info.isPlugged);
-          }.bind(this));
+        }.bind(this));
+        let ips = charges.map((charge, index) => {
+            return charge["ip"]
+        });
+        setChargeItems(ips);
     }, []);
-    const countries = ["192.173.62.115", "192.155.42.18", "163.18.229.135", "195.125.63.58"]
+    const onMessage = (e) => {
+        let data = e.nativeEvent.data;
+        setShowGateway(false);
+
+        let payment = JSON.parse(data);
+        if (payment.status === "COMPLETED") {
+            alert("PAYMENT MADE SUCCESSFULLY");
+        } else {
+            alert("PAYMENT FAILED. PLEASE TRY AGAIN");
+        }
+    }
+    const handleNormalCharge = () => {
+        setNormalCharge(!normalCharge);
+        if(normalCharge == true) {
+            setFastCharge(true)
+        } else {
+            setFastCharge(false)
+        }
+    }
+    const handleFastCharge = () => {
+        setFastCharge(!fastCharge);
+        if(fastCharge == true) {
+            setNormalCharge(true)
+        } else {
+            setNormalCharge(false)
+        }
+    }
+    // const countries = ["192.173.62.115", "192.155.42.18", "163.18.229.135", "195.125.63.58"]
     return (
-        <View style={styles.homeScreenContainer}>
-            <View style={styles.goBack}>
-                <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
-            </View>
-            <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.homeText}>Home</Text></View>
-            <View style={[styles.goBack, {marginTop: 5}]}><Text style={styles.selectChargeText}>Select Charge place</Text></View>
-            <View style={[styles.goBack, {marginTop: 15, flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}]}>
-                <SelectDropdown
-                    buttonStyle={styles.buttonStyle}
-                    buttonTextStyle={styles.buttonTextStyle}
-                    dropdownStyle={styles.dropdownStyle}
-                    rowStyle={styles.rowStyle}
-                    data={countries}
-                    onSelect={(selectedItem, index) => {console.log(selectedItem, index)}}
-                    buttonTextAfterSelection={(selectedItem, index) => {return selectedItem}}
-                    rowTextForSelection={(item, index) => {return item}}
-                    renderDropdownIcon={() => <FontAwesomeIcon icon={faCaretDown} size={15} style={{color: '#B7B7B7'}} />}
-                />
-            </View>
-            <View style={styles.divider}></View>
-            <View style={[styles.batteryStatusHeader, {marginTop: 40}]}>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.batteryTitle}>Battery Status:</Text><Text style={[styles.batteryTitle, {marginLeft: 5}]}>{batteryLevel}%</Text></View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                    <Text style={styles.automation}>Automation</Text>
-                    <Switch
-                        trackColor={'#D7F2FA'}
-                        thumbColor={'#59C7EA'}
-                        value={automation}  
-                        onValueChange ={(automation)=> setAutomation(automation)}
+        <ScrollView>
+            <View style={styles.homeScreenContainer}>
+                <View style={styles.goBack}>
+                    <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
+                </View>
+                <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.homeText}>Home</Text></View>
+                <View style={[styles.goBack, {marginTop: 5}]}><Text style={styles.selectChargeText}>Select Charge place</Text></View>
+                <View style={[styles.goBack, {marginTop: 15, flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}]}>
+                    { chargeItems.length != 0 && <SelectDropdown
+                        buttonStyle={styles.buttonStyle}
+                        buttonTextStyle={styles.buttonTextStyle}
+                        dropdownStyle={styles.dropdownStyle}
+                        rowStyle={styles.rowStyle}
+                        data={chargeItems}
+                        onSelect={(selectedItem, index) => handleChargeSelect(selectedItem)}
+                        buttonTextAfterSelection={(selectedItem, index) => {return selectedItem}}
+                        rowTextForSelection={(item, index) => {return item}}
+                        renderDropdownIcon={() => <FontAwesomeIcon icon={faCaretDown} size={15} style={{color: '#B7B7B7'}} />}
+                    />}
+                </View>
+                {showGateway ? (
+                    <Modal
+                        visible={showGateway}
+                        onDismiss={() => setShowGateway(false)}
+                        onRequestClose={() => setShowGateway(false)}
+                        animationType={'fade'}
+                        transparent
+                    >
+                        <View style={styles.webViewCon}>
+                            <View style={styles.wbHead}>
+                                <TouchableOpacity
+                                    style={{padding: 13}}
+                                    onPress={() => setShowGateway(false)}>
+                                    <Feather name={'x'} size={24} />
+                                </TouchableOpacity>
+                                <Text
+                                    style={{
+                                    flex: 1,
+                                    textAlign: 'center',
+                                    fontSize: 16,
+                                    fontWeight: 'bold',
+                                    color: '#00457C',
+                                    }}
+                                >
+                                    PayPal GateWay
+                                </Text>
+                                <View style={{padding: 13, opacity: prog ? 1 : 0}}>
+                                    <ActivityIndicator size={24} color={progClr} />
+                                </View>
+                            </View>
+                            <WebView
+                                source={{uri: 'https://my-pay-web.web.app/'}}
+                                style={{flex: 1}}
+                                onLoadStart={() => {
+                                    setProg(true);
+                                    setProgClr('#000');
+                                }}
+                                onLoadProgress={() => {
+                                    setProg(true);
+                                    setProgClr('#00457C');
+                                }}
+                                onLoadEnd={() => {
+                                    setProg(false);
+                                }}
+                                onLoad={() => {
+                                    setProg(false);
+                                }}
+                                onMessage={onMessage}
+                            />
+                        </View>
+                    </Modal>
+                ) : null}
+                <View style={styles.divider}></View>
+                <View style={[styles.batteryStatusHeader, {marginTop: 40}]}>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.batteryTitle}>Battery Status:</Text><Text style={[styles.batteryTitle, {marginLeft: 5}]}>{batteryLevel}%</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                        <Text style={styles.automation}>Automation</Text>
+                        <Switch
+                            trackColor={'#D7F2FA'}
+                            thumbColor={'#59C7EA'}
+                            value={automation}  
+                            onValueChange ={(automation)=> handleAutomation(automation)}
+                        />
+                    </View>
+                </View>
+                <View>
+                    <ProgressBar
+                        progress={batteryLevel/100}
+                        color={'#59C7EA'}
+                        style={styles.batteryProgress}
                     />
                 </View>
+                <View style={styles.divider}></View>
+                {/* <View style={styles.batteryStatusHeader}>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.price}>Price:</Text><Text style={[styles.price, {marginLeft: 5}]}>$1</Text></View>
+                </View> */}
+                <View style={[styles.batteryStatusHeader, {marginTop: 40}]}>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.batteryTitle}>Normal Charge:</Text><Text style={[styles.batteryTitle, {marginLeft: 5}]}>$1</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                        <RadioButton value={normalCharge} status={ normalCharge === true ? 'checked' : 'unchecked' } onPress={() => handleNormalCharge()} color='#59C7EA' />
+                    </View>
+                </View>
+                <View style={[styles.batteryStatusHeader, {marginTop: 40}]}>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.batteryTitle}>Fast Charge:</Text><Text style={[styles.batteryTitle, {marginLeft: 5}]}>$2</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                        <RadioButton value={fastCharge} status={ fastCharge === true ? 'checked' : 'unchecked' } onPress={() => handleFastCharge()} color='#59C7EA' />
+                    </View>
+                </View>
+                <View style={styles.divider}></View>
+                <View style={styles.payBtn}>
+                    <RoundButton title={'Pay Now'} onPress={() => submitPayment()} />
+                </View>
             </View>
-            <View>
-                <ProgressBar
-                    progress={batteryLevel/100}
-                    color={'#59C7EA'}
-                    style={styles.batteryProgress}
-                />
-            </View>
-            <View style={styles.divider}></View>
-            <View style={styles.batteryStatusHeader}>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.price}>Price:</Text><Text style={[styles.price, {marginLeft: 5}]}>$1</Text></View>
-            </View>
-            <View style={styles.payBtn}>
-                <RoundButton title={'Pay Now'} onPress={() => submitPayment()} />
-            </View>
-        </View>
+        </ScrollView>
     )
 }
 
@@ -87,7 +248,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
     homeScreenContainer: {
         width: '100%',
-        height: '100%',
+        height: Dimensions.get("window").height,
         paddingVertical: 20,
         backgroundColor: 'white'
     },
@@ -121,7 +282,7 @@ const styles = StyleSheet.create({
         color: '#B7B7B7',
     },
     dropdownStyle: {
-        backgroundColor: 'green',
+        backgroundColor: '#F3F4F7',
         position: 'relative',
         right: 50
     },
@@ -168,5 +329,19 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width - 60,
         marginTop: 15,
         alignSelf: 'center'
+    },
+    webViewCon: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+        wbHead: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f9f9f9',
+        zIndex: 25,
+        elevation: 2,
     },
 })

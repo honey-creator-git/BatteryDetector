@@ -1,15 +1,23 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Input } from 'react-native-elements';
 import { RadioButton } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import MapView , { Marker } from 'react-native-maps';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import RoundButton from '../../components/CustomButton';
+import { useColorSchemeListener } from '../../../utils/useColorSchemeListener'
 
 const MapScreen = (props) => {
+    const colorScheme = useColorSchemeListener();
     const [charge, setCharge] = useState('charged');
+    const defaultColor = colorScheme === 'dark' ? '#eee' : '#333';
     const [users, setUsers] = useState(0);
+    const location = props.route.params.location;
+    const back = props.route.params.back;
+    const mapRef = useRef<MapView>(null);
     const handleCharge = () => {
         if(charge == 'charged') setCharge('unCharged')
         else setCharge('charged')
@@ -20,6 +28,39 @@ const MapScreen = (props) => {
     const viewHistory = () => {
         props.navigation.navigate('History');
     }
+    const [selectedLocation, setSelectedLocation] = useState(location ? location : {
+        latitude: 37.78825,
+        longitude: -122.4324
+    });
+    const [coordinate, setCoordinate] = useState(location ? location : {
+        latitude: 37.78825,
+        longitude: -122.4324
+    })
+    const handleSelectLocation = (event) => {
+        const { latitude, longitude } = event.nativeEvent.coordinate;
+        setSelectedLocation({ latitude, longitude });
+    };
+
+    React.useLayoutEffect(() => {
+        props.navigation.setOptions({
+          headerRight: () => (
+            <TouchableOpacity 
+                  onPress={()=>{
+                    
+                    props.navigation.navigate(back, {location: {
+                        lat: selectedLocation?.latitude,
+                        lng: selectedLocation?.longitude
+                    }})
+                  }}
+                  style={{alignItems: 'center', marginRight: 8, flexDirection: 'row' }}
+                  >
+                    <MaterialIcons name='done' size={32} color={defaultColor} />
+                    <Text style={{color: defaultColor}}>Done</Text>
+                  </TouchableOpacity>
+          ),
+        });
+    }, [props.navigation, selectedLocation]);
+
     return (
         <KeyboardAwareScrollView
             keyboardShouldPersistTaps='always'
@@ -31,27 +72,43 @@ const MapScreen = (props) => {
                 </View>
                 <View style={[styles.mapShowContainerStyle, { marginTop: 20 }]}>
                     <Text style={styles.mapText}>Map</Text>
-                    <View style={styles.mapStyle}></View>
+                    <View style={styles.mapStyle}>
+                        <MapView 
+                            useRef={mapRef}
+                            style={styles.map}
+                            initialRegion={{
+                                latitude: coordinate.latitude,
+                                longitude: coordinate.longitude,
+                                latitudeDelta: 0.0922,
+                                longitudeDelta: 0.0421,
+                            }}
+                            onPress={handleSelectLocation}
+                            >
+                            {selectedLocation && (
+                                <Marker coordinate={selectedLocation} title="Selected Location" />
+                            )}
+                        </MapView>
+                    </View>
                 </View>
-                <View style={styles.chargeContainer}>
+                <View style={[styles.chargeContainer, {position: 'absolute', top: 500}]}>
                     <View><Text style={styles.chargeText}>Charge</Text></View>
                     <RadioButton value={charge} status={ charge === 'charged' ? 'checked' : 'unchecked' } onPress={() => handleCharge()} color='#59C7EA' />
                 </View>
-                    <View style={[styles.chargeContainer, {marginTop: 20}]}>
-                        <View><Text style={styles.chargeText}>Users</Text></View>
-                        <Input
-                            defaultValue=''
-                            inputContainerStyle={styles.inputUsers}
-                            containerStyle={styles.inputContainerStyle}
-                            inputStyle={styles.inputUsersStyle}
-                            underlineColorAndroid={'transparent'}
-                            autoCapitalize={"none"}
-                            placeholder='000000'
-                            placeholderTextColor={'#A5A5A5'}
-                            onChangeText={(text) => {setUsers(text)}}
-                        />
-                    </View>
-                <View style={styles.historyBtn}>
+                <View style={[styles.chargeContainer, {marginTop: 20, position: 'absolute', top: 550}]}>
+                    <View><Text style={styles.chargeText}>Users</Text></View>
+                    <Input
+                        defaultValue='10'
+                        inputContainerStyle={styles.inputUsers}
+                        containerStyle={styles.inputContainerStyle}
+                        inputStyle={styles.inputUsersStyle}
+                        underlineColorAndroid={'transparent'}
+                        autoCapitalize={"none"}
+                        placeholder='000000'
+                        placeholderTextColor={'#A5A5A5'}
+                        onChangeText={(text) => {setUsers(text)}}
+                    />
+                </View>
+                <View style={[styles.historyBtn, {position: 'absolute', top: 620}]}>
                     <RoundButton title={'View History'} onPress={() => viewHistory()} />
                 </View>
             </View>
@@ -95,6 +152,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         backgroundColor: '#F5F3F3',
         marginVertical: 15,
+
+        ...StyleSheet.absoluteFillObject,
+        flex: 1, //the container will fill the whole screen.
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        top: 20,
+        left: 30
     },
     chargeContainer: {
         width: '100%',
@@ -148,5 +213,15 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width - 60,
         marginTop: 30,
         alignSelf: 'center'
+    }, 
+    
+    container: {
+        ...StyleSheet.absoluteFillObject,
+        flex: 1, //the container will fill the whole screen.
+        justifyContent: "flex-end",
+        alignItems: "center",
+    }, 
+    map: {
+        ...StyleSheet.absoluteFillObject,
     },
 })
