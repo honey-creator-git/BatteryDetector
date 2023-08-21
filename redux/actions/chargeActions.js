@@ -64,13 +64,14 @@ function updateChargeForBatteryUsers(id, batteryUsers, token) {
     };
 }
 
-function updateChargeWithNameIpLocation(id, name, ip, latlon, token, navigation) {
+function updateChargeWithNameIpLocation(id, name, ip, latlon, users, token, navigation) {
     return dispatch => {
         axios.post(ENDPOINT + '/charge/edit/' + id,
             {
                 "Name": name,
                 "Ip": ip,
-                "Latlon": latlon
+                "Latlon": latlon,
+                "BatteryUsers": users
             },
             {
                 headers: {
@@ -79,7 +80,7 @@ function updateChargeWithNameIpLocation(id, name, ip, latlon, token, navigation)
         }).then((result)=>{
             const { data } = result
             if(data["status"] == true) {
-                navigation.navigate("AddCharge", {update: "success"})
+                navigation.navigate("ChargeSearch", {update: "success"})
             }
         }).catch(err=>{
             navigation.navigate('Signup', {err: "invalid"})

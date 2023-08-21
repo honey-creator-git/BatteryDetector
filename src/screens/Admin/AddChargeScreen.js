@@ -16,6 +16,7 @@ const AddCharge = (props) => {
     const [latLon, setLatLon] = useState('');
     const [edit, setEdit] = useState(false);
     const [chargeId, setChargeId] = useState('');
+    const [batteryUsers, setBatteryUsers] = useState([]);
     const handleGoBak = () => {
         props.navigation.goBack()
     }
@@ -23,7 +24,7 @@ const AddCharge = (props) => {
         if(edit == false) {
             dispatch(chargeActions.addNewCharge(name, ipAddress, latLon, token, props.navigation));
         } else if (edit == true) {
-            dispatch(chargeActions.updateChargeWithNameIpLocation(chargeId, name, ipAddress, latLon, token, props.navigation));
+            dispatch(chargeActions.updateChargeWithNameIpLocation(chargeId, name, ipAddress, latLon, batteryUsers, token, props.navigation));
         }
     }
     const handleLocation = () => {
@@ -31,9 +32,9 @@ const AddCharge = (props) => {
             const latlon = latLon.split(":");
             const latitude = latlon[0];
             const longitude = latlon[1];
-            props.navigation.navigate('Map', { location: { latitude: parseFloat(latitude), longitude: parseFloat(longitude) }, back: "ChargeSearch" });
+            props.navigation.navigate('Map', { id:chargeId, name: name, ip: ipAddress, location: { latitude: parseFloat(latitude), longitude: parseFloat(longitude) }, back: "ChargeSearch", batteryUsers: batteryUsers });
         } else {
-            props.navigation.navigate('Map', { location: { latitude: 37.78825, longitude: -122.4324 }, back: "ChargeSearch" });
+            props.navigation.navigate('Map', { id:chargeId, name: name, ip: ipAddress, location: { latitude: 37.78825, longitude: -122.4324 }, back: "ChargeSearch", batteryUsers: batteryUsers });
         }
     }
     useEffect(() => {
@@ -45,6 +46,14 @@ const AddCharge = (props) => {
         setLatLon(chargelatLon);
         const chargeEdit = props.route.params.edit;
         setEdit(chargeEdit);
+        const users = props.route.params.batteryUsers;
+        setBatteryUsers(users);
+        if(!!props.route.params.latitude && !!props.route.params.longitude) {
+            const latitude = props.route.params.latitude;
+            const longitude = props.route.params.longitude;
+            const location = latitude + ":" + longitude;
+            setLatLon(location);
+        }
         if(chargeEdit == true) {
             selectedChargeId = props.route.params.chargeId;
             setChargeId(selectedChargeId);
@@ -101,7 +110,7 @@ const AddCharge = (props) => {
                             placeholder='000 : 000'
                             placeholderTextColor={'#97999B'}
                             onChangeText={(text) => {setLatLon(text)}}
-                            onPressIn={() => edit == true && handleLocation()}
+                            onPressIn={() => handleLocation()}
                         />
                 </View>
                 <View style={styles.saveBtn}>

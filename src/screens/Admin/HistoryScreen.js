@@ -4,18 +4,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const HistoryScreen = (props) => {
-    const history = [
-        { date: '23/08/07', time: '13:20 PM', ip: '192.173.62.115', name: 'JAMES Q.', price: '1' },
-        { date: '23/08/05', time: '6:49 AM', ip: '192.155.42.18', name: 'CARL A.', price: '1' },
-        { date: '23/08/02', time: '10:24 AM', ip: '163.18.229.135', name: 'DAVID W.', price: '1' },
-        { date: '23/07/30', time: '13:20 PM', ip: '194.124.77.182', name: 'TONY L.', price: '1' },
-        { date: '23/07/17', time: '20:10 PM', ip: '195.125.63.58', name: 'LESLIE R.', price: '1' },
-        { date: '23/08/07', time: '8:50 PM', ip: '192.173.62.115', name: 'JAMES Q.', price: '1' },
-        { date: '23/08/07', time: '13:20 PM', ip: '192.173.62.115', name: 'JAMES Q.', price: '1' },
-        { date: '23/08/07', time: '13:20 PM', ip: '192.173.62.115', name: 'JAMES Q.', price: '1' },
-        { date: '23/08/07', time: '13:20 PM', ip: '192.173.62.115', name: 'JAMES Q.', price: '1' },
-        { date: '23/08/07', time: '13:20 PM', ip: '192.173.62.115', name: 'JAMES Q.', price: '1' }
-    ]
+    // const history = [
+    //     { date: '23/08/07', time: '13:20 PM', ip: '192.173.62.115', name: 'JAMES Q.', price: '1' },
+    //     { date: '23/08/05', time: '6:49 AM', ip: '192.155.42.18', name: 'CARL A.', price: '1' },
+    //     { date: '23/08/02', time: '10:24 AM', ip: '163.18.229.135', name: 'DAVID W.', price: '1' },
+    //     { date: '23/07/30', time: '13:20 PM', ip: '194.124.77.182', name: 'TONY L.', price: '1' },
+    //     { date: '23/07/17', time: '20:10 PM', ip: '195.125.63.58', name: 'LESLIE R.', price: '1' },
+    //     { date: '23/08/07', time: '8:50 PM', ip: '192.173.62.115', name: 'JAMES Q.', price: '1' },
+    //     { date: '23/08/07', time: '13:20 PM', ip: '192.173.62.115', name: 'JAMES Q.', price: '1' },
+    //     { date: '23/08/07', time: '13:20 PM', ip: '192.173.62.115', name: 'JAMES Q.', price: '1' },
+    //     { date: '23/08/07', time: '13:20 PM', ip: '192.173.62.115', name: 'JAMES Q.', price: '1' },
+    //     { date: '23/08/07', time: '13:20 PM', ip: '192.173.62.115', name: 'JAMES Q.', price: '1' }
+    // ]
+    const batteryUsers = props.route.params.batteryUsers;
+    const ip = props.route.params.ip;
     const handleGoBack = () => {
         props.navigation.goBack();
     }
@@ -30,17 +32,17 @@ const HistoryScreen = (props) => {
             <View style={styles.historyListStyle}>
                 <ScrollView contentContainerStyle={styles.scrollStyle}>
                     {
-                        history.map((item, index) => {
+                        batteryUsers.map((item, index) => {
                             return (
                                 <View key={index} style={styles.scrollItemContainer}>
                                     <View style={[styles.itemLeft, { marginRight: 15 }]}>
-                                        <View style={{marginBottom: 3, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={[styles.itemdatetimeText, {marginRight: 5}]}>{item.date}</Text><Text style={styles.itemdatetimeText}>{item.time}</Text></View>
-                                        <View style={{marginBottom: 3}}><Text style={styles.itemIpAddressText}>{item.ip}</Text></View>
-                                        <View><Text style={styles.itemNameText}>{item.name}</Text></View>
+                                        <View style={{marginBottom: 3, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={[styles.itemdatetimeText, {marginRight: 5}]}>{item["touchedAt"]}</Text></View>
+                                        <View style={{marginBottom: 3}}><Text style={styles.itemIpAddressText}>{ip}</Text></View>
+                                        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start'}}><Text style={styles.itemNameText}>{item["firstName"]}</Text><Text style={[styles.itemNameText, {marginLeft: 5}]}>{item["lastName"].charAt(0)}.</Text></View>
                                     </View>
                                     <View style={styles.itemRight}>
                                         <View style={{alignSelf: 'center'}}><Text style={styles.totalText}>TOTAL</Text></View>
-                                        <View style={styles.priceContainer}><Text style={[styles.priceText, { marginRight: 3 }]}>$</Text><Text style={styles.priceText}>{item.price}</Text></View>
+                                        <View style={styles.priceContainer}><Text style={[styles.priceText, { marginRight: 3 }]}>$</Text><Text style={styles.priceText}>1</Text></View>
                                     </View>
                                 </View>
                             )

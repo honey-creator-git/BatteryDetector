@@ -38,10 +38,10 @@ const ChargeSearch = (props) => {
         setSearchedArray([]);
     }
     const handleAddCharge = () => {
-        props.navigation.navigate("AddCharge", { chargeName: "", chargeIp: "", chargeLatLon: "", edit: false });
+        props.navigation.navigate("AddCharge", { chargeName: "", chargeIp: "", chargeLatLon: "", batteryUsers: [], edit: false });
     }
     const handleChargeEdit = (charge) => {
-        props.navigation.navigate("AddCharge", { chargeId: charge["id"], chargeName: charge["name"], chargeIp: charge["ip"], chargeLatLon: charge["latlon"], edit: true });
+        props.navigation.navigate("AddCharge", { chargeId: charge["id"], chargeName: charge["name"], chargeIp: charge["ip"], chargeLatLon: charge["latlon"], batteryUsers: charge["batteryUsers"], edit: true });
     }
     return (
         <ScrollView>

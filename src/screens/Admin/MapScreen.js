@@ -15,8 +15,17 @@ const MapScreen = (props) => {
     const [charge, setCharge] = useState('charged');
     const defaultColor = colorScheme === 'dark' ? '#eee' : '#333';
     const [users, setUsers] = useState(0);
+    const chargeId = props.route.params.id;
     const location = props.route.params.location;
     const back = props.route.params.back;
+    const batteryUsers = props.route.params.batteryUsers;
+    const name = props.route.params.name;
+    const ip = props.route.params.ip;
+    var defaultUsersLength = 0;
+    if(batteryUsers != null) {
+        defaultUsersLength = batteryUsers.length;
+        console.log("length => ", defaultUsersLength);
+    }
     const mapRef = useRef<MapView>(null);
     const handleCharge = () => {
         if(charge == 'charged') setCharge('unCharged')
@@ -26,7 +35,11 @@ const MapScreen = (props) => {
         props.navigation.goBack();
     }
     const viewHistory = () => {
-        props.navigation.navigate('History');
+        if (defaultUsersLength == 0) {
+            alert("No Users for this battery!");
+        } else {
+            props.navigation.navigate('History', { ip: ip, batteryUsers, batteryUsers });
+        }        
     }
     const [selectedLocation, setSelectedLocation] = useState(location ? location : {
         latitude: 37.78825,
@@ -38,6 +51,9 @@ const MapScreen = (props) => {
     })
     const handleSelectLocation = (event) => {
         const { latitude, longitude } = event.nativeEvent.coordinate;
+        console.log("Lattitude => ", latitude);
+        console.log("Longitude => ", longitude);
+        props.navigation.navigate("AddCharge", { chargeId: chargeId, chargeName: name, chargeIp: ip, latitude: latitude, longitude: longitude, batteryUsers: batteryUsers, edit: true })
         setSelectedLocation({ latitude, longitude });
     };
 
@@ -97,7 +113,7 @@ const MapScreen = (props) => {
                 <View style={[styles.chargeContainer, {marginTop: 20, position: 'absolute', top: 550}]}>
                     <View><Text style={styles.chargeText}>Users</Text></View>
                     <Input
-                        defaultValue='10'
+                        defaultValue={defaultUsersLength.toString()}
                         inputContainerStyle={styles.inputUsers}
                         containerStyle={styles.inputContainerStyle}
                         inputStyle={styles.inputUsersStyle}
