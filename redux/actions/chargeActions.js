@@ -33,12 +33,11 @@ function addNewCharge(name, ip, latlon, token, navigation) {
                     },
                 }).then((rest) => {
                     const { data } = rest
+                    console.log("Fetched All Charges => ", data["payload"]);
                     const charges = data["payload"];
                     dispatch({ type: chargeConstants.SET_CHARGES, chargeData: charges });
-                    navigation.navigate('ChargeSearch');
-                })
-            } else if(data["status"] == false){
-                navigation.navigate('Signup', {err: "invalid"});
+                    navigation.navigate('ChargeSearch', { update: '', addCharge: true })
+                });
             }
         }).catch(err=>{
             navigation.navigate('Signup', {err: "invalid"})
@@ -66,12 +65,17 @@ function updateChargeForBatteryUsers(id, batteryUsers, token) {
 
 function updateChargeWithNameIpLocation(id, name, ip, latlon, users, token, navigation) {
     return dispatch => {
+        console.log("Charge ID => ", id);
+        console.log("Charge Name => ", name);
+        console.log("Charge IP => ", ip);
+        console.log("Latlon => ", latlon);
+        console.log("Battery Users => ", users);
         axios.post(ENDPOINT + '/charge/edit/' + id,
             {
                 "Name": name,
-                "Ip": ip,
+                "IpAddress": ip,
                 "Latlon": latlon,
-                "BatteryUsers": users
+                "batteryUsers": users
             },
             {
                 headers: {
@@ -80,9 +84,10 @@ function updateChargeWithNameIpLocation(id, name, ip, latlon, users, token, navi
         }).then((result)=>{
             const { data } = result
             if(data["status"] == true) {
-                navigation.navigate("ChargeSearch", {update: "success"})
+                navigation.navigate("ChargeSearch", {update: "success", addCharge: false})
             }
-        }).catch(err=>{
+        }).catch(err => {
+            console.log("Error => ", err);
             navigation.navigate('Signup', {err: "invalid"})
         });
     };

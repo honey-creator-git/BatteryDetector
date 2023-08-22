@@ -6,6 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { showMessage } from "react-native-flash-message";
 import Checkbox from '../../components/CustomCheckBox';
 import RoundButton from '../../components/CustomButton';
+import LoadingOverlay from '../../components/LoadingOverlay';
 import Images from '../../assets/Images';
 import { userActions } from '../../../redux/actions/userActions';
 
@@ -17,15 +18,27 @@ const SignupScreen = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     useEffect(() => {
         if (props.route.params) {
-          const error = props.route.params.err;
-          if (error) {
-            showMessage({
-              message: "Email has already been taken."
-            });
-          }
+            setLoading(false);
+            const error = props.route.params.err;
+            if (error) {
+                showMessage({
+                message: "Email has already been taken."
+                });
+            }
+            const udpConnection = props.route.params.udpConnection;
+            const role = props.route.params.role;
+            if(udpConnection == true) {
+                alert("Connection UDP Successfully !")
+                setTimeout(() => {
+                    if(role === 'user') {
+                        props.navigation.navigate("Home");
+                    }
+                }, 3000);
+            }
         }
     }, [props.route.params])
 
@@ -77,8 +90,14 @@ const SignupScreen = (props) => {
             });
             return;
         }
-        // setLoading(true);        
-        dispatch(userActions.register(firstName, lastName, email, password, props.navigation));
+        setLoading(true);
+        for(let i = 0; i < 101; i++) {
+            setProgress(i);
+        }
+        setTimeout(() => {
+            dispatch(userActions.register(firstName, lastName, email, password, props.navigation));
+            setLoading(false);
+        }, 5000);
     }
     return (
         <KeyboardAwareScrollView
@@ -86,6 +105,7 @@ const SignupScreen = (props) => {
             style={{ flex:1 }}  
         >
             <View style={styles.loginContainer}>
+                { loading && <LoadingOverlay /> }
                 <View style={styles.loginTitle}>
                     <Text style={styles.loginText}>Sign Up 👋</Text>
                 </View>

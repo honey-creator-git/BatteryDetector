@@ -31,16 +31,16 @@ function login(username, password, navigation) {
                     const charges = data["payload"];
                     dispatch({ type: chargeConstants.SET_CHARGES, chargeData: charges });
                     if(userData["role"] == "User") {
-                        navigation.navigate('Home');
+                        navigation.navigate('Login', { udpConnection: true, role: 'user', err: '' });
                     } else {
-                        navigation.navigate('ChargeSearch');
+                        navigation.navigate('Login', { udpConnection: true, role: 'admin', err: '' });
                     }
                 })
             } else if(data["status"] == false){
-                navigation.navigate('Login', {err: "invalid"});
+                navigation.navigate('Login', { udpConnection: false, role: '', err: 'invalid'});
             }
         }).catch(err=>{
-            navigation.navigate('Login', {err: "invalid"})
+            navigation.navigate('Login', { udpConnection: false, role: '', err: 'invalid' })
         });
     };
 }
@@ -70,13 +70,13 @@ function register(firstName, lastName, email, password, navigation) {
                     const { data } = rest
                     const charges = data["payload"];
                     dispatch({ type: chargeConstants.SET_CHARGES, chargeData: charges });
-                    navigation.navigate('Home');
+                    navigation.navigate('Signup', {udpConnection: true, role: 'user', err: ''});
                 })
             } else if(data["status"] == false) {
-                navigation.navigate('Signup', {err: "invalid"});
+                navigation.navigate('Signup', {udpConnection: false, role: '', err: 'invalid'});
             }
         }).catch(err => {
-            navigation.navigate('Signup', {err: 'invalid'});
+            navigation.navigate('Signup', {udpConnection: false, role: '', err: 'invalid'});
         });
     };
 }

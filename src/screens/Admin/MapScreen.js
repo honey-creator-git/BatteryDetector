@@ -21,6 +21,7 @@ const MapScreen = (props) => {
     const batteryUsers = props.route.params.batteryUsers;
     const name = props.route.params.name;
     const ip = props.route.params.ip;
+    const edit = props.route.params.edit;
     var defaultUsersLength = 0;
     if(batteryUsers != null) {
         defaultUsersLength = batteryUsers.length;
@@ -53,7 +54,7 @@ const MapScreen = (props) => {
         const { latitude, longitude } = event.nativeEvent.coordinate;
         console.log("Lattitude => ", latitude);
         console.log("Longitude => ", longitude);
-        props.navigation.navigate("AddCharge", { chargeId: chargeId, chargeName: name, chargeIp: ip, latitude: latitude, longitude: longitude, batteryUsers: batteryUsers, edit: true })
+        props.navigation.navigate("AddCharge", { chargeId: chargeId, chargeName: name, chargeIp: ip, latitude: latitude, longitude: longitude, batteryUsers: batteryUsers, edit: edit })
         setSelectedLocation({ latitude, longitude });
     };
 

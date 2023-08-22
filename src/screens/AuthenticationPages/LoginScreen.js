@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
 import { Input, CheckBox } from 'react-native-elements';
 import { showMessage } from "react-native-flash-message";
 import Checkbox from '../../components/CustomCheckBox';
 import RoundButton from '../../components/CustomButton';
+import LoadingOverlay from '../../components/LoadingOverlay';
 import Images from '../../assets/Images';
 import { userActions } from '../../../redux/actions/userActions';
 
@@ -14,22 +15,38 @@ const LoginScreen = (props) => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [progress, setProgress] = useState(0);
     const handleCheckboxChange = () => {
         if(selectedIndex === 1) setSelectedIndex(0)
         else setSelectedIndex(1)
     };
     useEffect(() => {
         if (props.route.params) {
-          const error = props.route.params.err;
-          if (error == "invalid") {
-            showMessage({
-              message: "UserName or Password is incorrect."
-            });
-          } else if (error == "token is expired") {
-            showMessage({
-              message: "User Token has been expired."
-            });
-          }
+            setLoading(false);
+            const error = props.route.params.err;
+            if (error == "invalid") {
+                showMessage({
+                    message: "UserName or Password is incorrect."
+                });
+            } else if (error == "token is expired") {
+                showMessage({
+                    message: "User Token has been expired."
+                });
+            }
+            const udpConnection = props.route.params.udpConnection;
+            const role = props.route.params.role;
+            console.log("UDP Connection => ", udpConnection);
+            console.log("User Role => ", role);
+            if(udpConnection == true) {
+                alert("Connection UDP Successfully !")
+                setTimeout(() => {
+                    if(role === 'user') {
+                        props.navigation.navigate("Home");
+                    } else if(role === 'admin') {
+                        props.navigation.navigate("ChargeSearch")
+                    }
+                }, 3000)
+            }
         }
     }, [props.route.params])
 
@@ -40,66 +57,77 @@ const LoginScreen = (props) => {
             });
             return;
         } else {
-            // setLoading(true);
-            dispatch(userActions.login(email, password, props.navigation));
+            setLoading(true);
+            for(let i = 0; i < 101; i++) {
+                setProgress(i);
+            }
+            setTimeout(() => {
+                dispatch(userActions.login(email, password, props.navigation));
+                setLoading(false);
+            }, 5000);
         }
     }
     return (
         <View style={styles.loginContainer}>
-            <View style={styles.loginTitle}>
-                <Text style={styles.loginText}>Login 👋</Text>
-            </View>
-            <View style={styles.inputContainer}>
-                <Input
-                    defaultValue=''
-                    inputContainerStyle={styles.inputContainerStyle}
-                    inputStyle={styles.inputStyle}
-                    underlineColorAndroid={'transparent'}
-                    autoCapitalize={"none"}
-                    keyboardType={'email-address'}
-                    placeholder='Email'
-                    placeholderTextColor={'#97999B'}
-                    onChangeText={(text) => {setEmail(text)}}
-                    onSubmitEditing={() => {}}
-                />
-                <Input
-                    defaultValue=''
-                    secureTextEntry={true}
-                    containerStyle={{width: '100%'}}
-                    inputContainerStyle={styles.inputContainerStylePassword}
-                    inputStyle={styles.inputStyle}
-                    placeholder='Password'
-                    placeholderTextColor={'#97999B'}
-                    onChangeText={(text) => {setPassword(text)}}
-                    ref={ref => {}}
-                />
-                <View style={styles.forgotPasswordContainer}>
-                    <Checkbox
-                        id={1}
-                        btnstyles={styles.btnstyles}
-                        btnstylesSelect={styles.btnstylesSelect}
-                        selectedIndex={selectedIndex}
-                        onCheckboxChange={handleCheckboxChange}
-                    />
-                    <TouchableOpacity 
-                        onPress={() => {}}
-                    >
-                        <Text style={styles.forgetTxt}>Forgot password?</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.LoginBtn}>
-                    <RoundButton title={'Login'} onPress={() => submitLogin()} />
-                </View>
-                <View style={styles.orloginWithContainer}>
-                    <TouchableOpacity style={styles.orloginWithContainer}>
-                        <Image
-                            source={Images.google_icon}
-                            resizeMode='stretch'
+            <View>
+                { loading && <LoadingOverlay progress={progress} /> }
+                <ScrollView>
+                    <View style={styles.loginTitle}>
+                        <Text style={styles.loginText}>Login 👋</Text>
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Input
+                            defaultValue=''
+                            inputContainerStyle={styles.inputContainerStyle}
+                            inputStyle={styles.inputStyle}
+                            underlineColorAndroid={'transparent'}
+                            autoCapitalize={"none"}
+                            keyboardType={'email-address'}
+                            placeholder='Email'
+                            placeholderTextColor={'#97999B'}
+                            onChangeText={(text) => {setEmail(text)}}
+                            onSubmitEditing={() => {}}
                         />
-                        <View style={{marginLeft: 10}}><Text style={styles.socialLoginText}>Login with Google</Text></View>
-                    </TouchableOpacity>
-                </View>
-            </View>
+                        <Input
+                            defaultValue=''
+                            secureTextEntry={true}
+                            containerStyle={{width: '100%'}}
+                            inputContainerStyle={styles.inputContainerStylePassword}
+                            inputStyle={styles.inputStyle}
+                            placeholder='Password'
+                            placeholderTextColor={'#97999B'}
+                            onChangeText={(text) => {setPassword(text)}}
+                            ref={ref => {}}
+                        />
+                        <View style={styles.forgotPasswordContainer}>
+                            <Checkbox
+                                id={1}
+                                btnstyles={styles.btnstyles}
+                                btnstylesSelect={styles.btnstylesSelect}
+                                selectedIndex={selectedIndex}
+                                onCheckboxChange={handleCheckboxChange}
+                            />
+                            <TouchableOpacity 
+                                onPress={() => {}}
+                            >
+                                <Text style={styles.forgetTxt}>Forgot password?</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.LoginBtn}>
+                            <RoundButton title={'Login'} onPress={() => submitLogin()} />
+                        </View>
+                        <View style={styles.orloginWithContainer}>
+                            <TouchableOpacity style={styles.orloginWithContainer}>
+                                <Image
+                                    source={Images.google_icon}
+                                    resizeMode='stretch'
+                                />
+                                <View style={{marginLeft: 10}}><Text style={styles.socialLoginText}>Login with Google</Text></View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </ScrollView>
+            </View>     
         </View>
     )
 }
@@ -114,7 +142,7 @@ const styles = StyleSheet.create({
         paddingRight: 15,
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     loginTitle: {
         width: '100%',

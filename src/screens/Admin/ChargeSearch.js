@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { View, Text, TouchableOpacity, Switch, Image, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -8,7 +8,7 @@ import { Searchbar } from 'react-native-paper';
 const ChargeSearch = (props) => {
     const [chargeSearch, setChargeSearch] = useState('');
     const [searchedArray, setSearchedArray] = useState([]);
-    const charges = useSelector((state) => state.charge["charges"])
+    const charges = useSelector((state) => state.charge["charges"]);
     // var charges = [
     //     {chargeNumber: '192.173.62.115', chargeCountry: 'New Zealand'},
     //     {chargeNumber: '192.155.42.18', chargeCountry: 'United States'},
@@ -43,6 +43,22 @@ const ChargeSearch = (props) => {
     const handleChargeEdit = (charge) => {
         props.navigation.navigate("AddCharge", { chargeId: charge["id"], chargeName: charge["name"], chargeIp: charge["ip"], chargeLatLon: charge["latlon"], batteryUsers: charge["batteryUsers"], edit: true });
     }
+
+    useEffect(() => {
+        if(props.route.params) {
+            const addCharge = props.route.params.addCharge;
+            if(addCharge == true) {
+                console.log("Added New Charge !");
+            }
+            
+            if(props.route.params.update == "success") {
+                alert("Charge has been updated successfully!");
+            }
+            if(props.route.params.addCharge == true) {
+                alert("Charge has been added successfully!");
+            }
+        }
+    }, [props.route.params]);
     return (
         <ScrollView>
             <View style={styles.addChargeContainer}>
