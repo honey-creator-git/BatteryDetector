@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { StyleSheet, View, Text, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
 import { Input, CheckBox } from 'react-native-elements';
 import { showMessage } from "react-native-flash-message";
+import Modal from "react-native-modal";
 import Checkbox from '../../components/CustomCheckBox';
 import RoundButton from '../../components/CustomButton';
 import LoadingOverlay from '../../components/LoadingOverlay';
@@ -16,6 +17,7 @@ const LoginScreen = (props) => {
     const [loading, setLoading] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [progress, setProgress] = useState(0);
+    const [isModalVisible, setModalVisible] = useState(false);
     const handleCheckboxChange = () => {
         if(selectedIndex === 1) setSelectedIndex(0)
         else setSelectedIndex(1)
@@ -38,8 +40,10 @@ const LoginScreen = (props) => {
             console.log("UDP Connection => ", udpConnection);
             console.log("User Role => ", role);
             if(udpConnection == true) {
-                alert("Connection UDP Successfully !")
+                // alert("Connection UDP Successfully !")
+                setModalVisible(true);
                 setTimeout(() => {
+                    setModalVisible(false);
                     if(role === 'user') {
                         props.navigation.navigate("Home");
                     } else if(role === 'admin') {
@@ -71,6 +75,11 @@ const LoginScreen = (props) => {
         <View style={styles.loginContainer}>
             <View>
                 { loading && <LoadingOverlay progress={progress} /> }
+                <Modal isVisible={isModalVisible}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalTextStyle}>Connection UDP Successfully!</Text>
+                    </View>
+                </Modal>
                 <ScrollView>
                     <View style={styles.loginTitle}>
                         <Text style={styles.loginText}>Login 👋</Text>
@@ -232,5 +241,20 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500',
         color: 'black'
+    },
+    modalContainer: {
+        width: Dimensions.get('window').width - 60,
+        height: 70,
+        borderRadius: 10,
+        backgroundColor: '#2AC062',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center'
+    },
+    modalTextStyle: {
+        color: 'white',
+        fontSize: 20,
+        fontWeight: '700'
     }
 })

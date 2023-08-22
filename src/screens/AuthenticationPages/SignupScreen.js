@@ -5,6 +5,7 @@ import { Input, CheckBox } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { showMessage } from "react-native-flash-message";
 import Checkbox from '../../components/CustomCheckBox';
+import Modal from "react-native-modal";
 import RoundButton from '../../components/CustomButton';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import Images from '../../assets/Images';
@@ -19,6 +20,7 @@ const SignupScreen = (props) => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
+    const [isModalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         if (props.route.params) {
@@ -32,12 +34,14 @@ const SignupScreen = (props) => {
             const udpConnection = props.route.params.udpConnection;
             const role = props.route.params.role;
             if(udpConnection == true) {
-                alert("Connection UDP Successfully !")
-                setTimeout(() => {
-                    if(role === 'user') {
-                        props.navigation.navigate("Home");
-                    }
-                }, 3000);
+                // alert("Connection UDP Successfully !")
+                // setModalVisible(true);
+                // setTimeout(() => {
+                    // setModalVisible(false);
+                    // if(role === 'user') {
+                props.navigation.navigate("Login");
+                    // }
+                // }, 3000);
             }
         }
     }, [props.route.params])
@@ -90,14 +94,14 @@ const SignupScreen = (props) => {
             });
             return;
         }
-        setLoading(true);
-        for(let i = 0; i < 101; i++) {
-            setProgress(i);
-        }
-        setTimeout(() => {
-            dispatch(userActions.register(firstName, lastName, email, password, props.navigation));
-            setLoading(false);
-        }, 5000);
+        // setLoading(true);
+        // for(let i = 0; i < 101; i++) {
+        //     setProgress(i);
+        // }
+        // setTimeout(() => {
+        dispatch(userActions.register(firstName, lastName, email, password, props.navigation));
+            // setLoading(false);
+        // }, 5000);
     }
     return (
         <KeyboardAwareScrollView
@@ -105,7 +109,12 @@ const SignupScreen = (props) => {
             style={{ flex:1 }}  
         >
             <View style={styles.loginContainer}>
-                { loading && <LoadingOverlay /> }
+                {/* { loading && <LoadingOverlay /> } */}
+                {/* <Modal isVisible={isModalVisible}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalTextStyle}>Connection UDP Successfully!</Text>
+                    </View>
+                </Modal> */}
                 <View style={styles.loginTitle}>
                     <Text style={styles.loginText}>Sign Up 👋</Text>
                 </View>
@@ -252,5 +261,20 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500',
         color: 'black'
+    },
+    modalContainer: {
+        width: Dimensions.get('window').width - 60,
+        height: 70,
+        borderRadius: 10,
+        backgroundColor: '#2AC062',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center'
+    },
+    modalTextStyle: {
+        color: 'white',
+        fontSize: 20,
+        fontWeight: '700'
     }
 })
