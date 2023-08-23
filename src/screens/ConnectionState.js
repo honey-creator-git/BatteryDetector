@@ -1,24 +1,37 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useDispatch } from 'react-redux';
 import { View, Text, TouchableOpacity, Switch, Image, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import { Input } from 'react-native-elements';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { ProgressBar } from 'react-native-paper';
+import Modal from "react-native-modal";
 import RoundButton from '../components/CustomButton';
 import Images from '../assets/Images';
 import { userActions } from '../../redux/actions/userActions';
 
 const ConnectionStateScreen = (props) => {
     const dispatch = useDispatch();
+    const [isModalVisible, setModalVisible] = useState(false);
     const handleGoBak = () => {
         props.navigation.goBack();
     }
     const handleConnectionConfirm = () => {
         dispatch(userActions.logout(props.navigation));
     }
+    useEffect(() => {
+        setModalVisible(true);
+        setTimeout(() => {
+            setModalVisible(false);
+        }, 4000);
+    }, []);
     return (
         <ScrollView>
+            <Modal isVisible={isModalVisible}>
+                <View style={styles.modalContainer}>
+                    <Text style={styles.modalTextStyle}>Device Charged 100% successfully!</Text>
+                </View>
+            </Modal>
             <View style={styles.paymentScreenContainer}>
                 <View style={styles.goBack}>
                     <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
@@ -79,4 +92,19 @@ const styles = StyleSheet.create({
         marginTop: 350,
         alignSelf: 'center'
     },
+    modalContainer: {
+        width: Dimensions.get('window').width - 30,
+        height: 70,
+        borderRadius: 10,
+        backgroundColor: '#2AC062',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center'
+    },
+    modalTextStyle: {
+        color: 'white',
+        fontSize: 20,
+        fontWeight: '700'
+    }
 })

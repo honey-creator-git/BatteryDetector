@@ -9,12 +9,12 @@ const LoadingOverlay = ({ progress = 0 }) => {
 
     return (
         <View style={styles.container}>
-            { progress == 100 && <View style={styles.checkContainer}><FontAwesomeIcon icon={faCircleCheck} size={100} color="#59C7EA" /></View>}
+           <View style={styles.checkContainer}><FontAwesomeIcon icon={faCircleCheck} size={100} color="#59C7EA" /></View>
 
             <AnimatedProgressWheel
                 progress={progress}
                 animateFromValue={0}
-                duration={5000}
+                duration={7000}
                 color={'white'}
                 fullColor={'#59C7EA'}
                 size={150}
@@ -33,14 +33,14 @@ const styles = StyleSheet.create({
         top: 0, 
         left: 0, 
         right: 0, 
-        bottom: Dimensions.get('window').height / 2, 
+        bottom: 40, 
         zIndex: 10, 
         backgroundColor: '#ffffffcc'
     },
     checkContainer: {
         position: 'absolute',
-        top: Dimensions.get('window').height / 4 - 50,
-        left: Dimensions.get('window').width / 2 - 65,
+        top: Dimensions.get('window').height / 2 - 70,
+        left: Dimensions.get('window').width / 2 - 50,
         right: 0,
         bottom: 0
     }

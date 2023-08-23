@@ -6,6 +6,9 @@ import FlashMessage from "react-native-flash-message";
 import AuthenticationScreen from './src/screens/AuthenticationScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import PaymentDataScreen from './src/screens/PaymentDataScreen';
+import SelectionScreen from './src/screens/SelectionScreen';
+import VirtualBatteryScreen from './src/screens/VirtualBatteryScreen';
+import AddVirtualBatteryScreen from './src/screens/AddVirtualBatteryScreen';
 
 import ChargeSearch from './src/screens/Admin/ChargeSearch';
 import AddCharge from './src/screens/Admin/AddChargeScreen';
@@ -35,6 +38,9 @@ const Navigation = () => {
                 <Stack.Screen name="AddCharge" component={AddCharge} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
                 <Stack.Screen name="Map" component={MapScreen} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
                 <Stack.Screen name="History" component={HistoryScreen} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
+                <Stack.Screen name="Selection" component={SelectionScreen} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
+                <Stack.Screen name="VirtualBattery" component={VirtualBatteryScreen} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
+                <Stack.Screen name="AddVirtualBattery" component={AddVirtualBatteryScreen} options={{headerShown: false, gestureEnabled: false}}></Stack.Screen>
             </Stack.Navigator>            
         </NavigationContainer>
     )

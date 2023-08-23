@@ -24,7 +24,7 @@ const LoginScreen = (props) => {
     };
     useEffect(() => {
         if (props.route.params) {
-            setLoading(false);
+            // setLoading(false);
             const error = props.route.params.err;
             if (error == "invalid") {
                 showMessage({
@@ -41,15 +41,15 @@ const LoginScreen = (props) => {
             console.log("User Role => ", role);
             if(udpConnection == true) {
                 // alert("Connection UDP Successfully !")
-                setModalVisible(true);
-                setTimeout(() => {
-                    setModalVisible(false);
+                // setModalVisible(true);
+                // setTimeout(() => {
+                    // setModalVisible(false);
                     if(role === 'user') {
-                        props.navigation.navigate("Home");
+                        props.navigation.navigate("Selection");
                     } else if(role === 'admin') {
                         props.navigation.navigate("ChargeSearch")
                     }
-                }, 3000)
+                // }, 3000)
             }
         }
     }, [props.route.params])
@@ -61,25 +61,26 @@ const LoginScreen = (props) => {
             });
             return;
         } else {
-            setLoading(true);
-            for(let i = 0; i < 101; i++) {
-                setProgress(i);
-            }
-            setTimeout(() => {
-                dispatch(userActions.login(email, password, props.navigation));
-                setLoading(false);
-            }, 5000);
+            // setLoading(true);
+            // for(let i = 0; i < 101; i++) {
+            //     setProgress(i);
+            // }
+            // setTimeout(() => {
+            //     dispatch(userActions.login(email, password, props.navigation));
+            //     setLoading(false);
+            // }, 5000);
+            dispatch(userActions.login(email, password, props.navigation));
         }
     }
     return (
         <View style={styles.loginContainer}>
             <View>
-                { loading && <LoadingOverlay progress={progress} /> }
-                <Modal isVisible={isModalVisible}>
+                {/* { loading && <LoadingOverlay progress={progress} /> } */}
+                {/* <Modal isVisible={isModalVisible}>
                     <View style={styles.modalContainer}>
                         <Text style={styles.modalTextStyle}>Connection UDP Successfully!</Text>
                     </View>
-                </Modal>
+                </Modal> */}
                 <ScrollView>
                     <View style={styles.loginTitle}>
                         <Text style={styles.loginText}>Login 👋</Text>

@@ -8,6 +8,7 @@ import { ProgressBar, RadioButton } from 'react-native-paper';
 import { WebView } from 'react-native-webview';
 import Feather from 'react-native-vector-icons/Feather';
 import RoundButton from '../components/CustomButton';
+import LoadingOverlay from '../components/LoadingOverlay';
 import { chargeActions } from '../../redux/actions/chargeActions';
 
 var BatteryManager = NativeModules.BatteryManager;
@@ -15,7 +16,7 @@ var BatteryManager = NativeModules.BatteryManager;
 const HomeScreen = (props) => {
     const dispatch = useDispatch();
     const [automation, setAutomation] = useState(false);
-    const [batteryLevel, setBatteryLevel] = useState(null);
+    const [batteryLevel, setBatteryLevel] = useState(25);
     const [charging, setCharging] = useState(false);
     const [showGateway, setShowGateway] = useState(false);
     const [prog, setProg] = useState(false);
@@ -24,6 +25,9 @@ const HomeScreen = (props) => {
     const [selectedCharge, setSelectedCharge] = useState(null);
     const [normalCharge, setNormalCharge] = useState(true);
     const [fastCharge, setFastCharge] = useState(false);
+    const [loading, setLoading] = useState(false);
+    // const [chargeModal, setChargeModal] = useState(false);
+    const [progress, setProgress] = useState(0);
     const charges = useSelector((state) => state.charge["charges"]);
     const token = useSelector((state) => state.user["token"]);
     const currentUser = useSelector((state) => state.user["user"]);
@@ -65,12 +69,23 @@ const HomeScreen = (props) => {
         } else {
             dispatch(chargeActions.updateChargeForBatteryUsers(updateChargeId, batteryUsers, token));
         }
+
         if (batteryLevel === 100) {
+            // setChargeModal(false);
             props.navigation.navigate("ConnectoinState");
+        } else {
+            alert("\nPLEASE WAIT\n\nDO NOT UNPLUG DEVICE\n\nMAKE SURE DEVICE IS TURNED ON");
+            setLoading(true);
+            for(let i = 0; i < 101; i++) {
+                setProgress(i);
+            }
+            setTimeout(() => {
+                setLoading(false);
+            }, 7000);
         }
     }
     const onBatteryStatus = (info) => {
-        setBatteryLevel(info.level);
+        // setBatteryLevel(info.level);
         setCharging(info.isPlugged);
 
         if(info.level == 100 && selectedCharge !== null) {
@@ -79,24 +94,42 @@ const HomeScreen = (props) => {
     }
     const handleAutomation = (prop) => {
         setAutomation(prop);
-        if (prop == true && batteryLevel === 100) {
+        if (prop == true && batteryLevel === 100 && selectedCharge != null) {
             props.navigation.navigate("ConnectoinState");
         }
-        if (prop == true && selectedCharge !== null) {
-            setShowGateway(true);
+        // if (prop == true && selectedCharge !== null) {
+        //     setShowGateway(true);
+        // }
+        if (batteryLevel < 30) {
+            alert("\nBattery is Low!\n\nCONNECT CHARGE TO YOUR DEVICE.")
         }
     }
     useEffect(() => {
+        setTimeout(() => {
+            if(batteryLevel < 30) {
+                alert("\nBattery is Low!\n\nCONNECT CHARGE TO YOUR DEVICE.")
+            }
+        }, 500);
         BatteryManager.updateBatteryLevel(function(info){
             this._subscription = DeviceEventEmitter.addListener('BatteryStatus', onBatteryStatus(info));
-            setBatteryLevel(info.level);
+            // setBatteryLevel(info.level);
             setCharging(info.isPlugged);
         }.bind(this));
         let ips = charges.map((charge, index) => {
             return charge["ip"]
         });
         setChargeItems(ips);
+        // setTimeout(() => {
+        //     if (selectedCharge === null) {
+        //         alert("Choose a charge in the list of charges.");
+        //     }
+        // }, 500);
     }, []);
+    useEffect(() => {
+        if(batteryLevel == 100) {
+            props.navigation.navigate("ConnectoinState");
+        }
+    }, [batteryLevel]);
     const onMessage = (e) => {
         let data = e.nativeEvent.data;
         setShowGateway(false);
@@ -128,6 +161,7 @@ const HomeScreen = (props) => {
     return (
         <ScrollView>
             <View style={styles.homeScreenContainer}>
+                { loading && <LoadingOverlay progress={progress} /> }
                 <View style={styles.goBack}>
                     <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
                 </View>
@@ -135,6 +169,7 @@ const HomeScreen = (props) => {
                 <View style={[styles.goBack, {marginTop: 5}]}><Text style={styles.selectChargeText}>Select Charge place</Text></View>
                 <View style={[styles.goBack, {marginTop: 15, flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}]}>
                     { chargeItems.length != 0 && <SelectDropdown
+                        searchPlaceHolder={'Select a charge'}
                         buttonStyle={styles.buttonStyle}
                         buttonTextStyle={styles.buttonTextStyle}
                         dropdownStyle={styles.dropdownStyle}
@@ -146,6 +181,24 @@ const HomeScreen = (props) => {
                         renderDropdownIcon={() => <FontAwesomeIcon icon={faCaretDown} size={15} style={{color: '#B7B7B7'}} />}
                     />}
                 </View>
+                {/* {
+                    chargeModal && 
+                    <Modal
+                        style={{zIndex: 10}}
+                        visible={chargeModal}
+                        onDismiss={() => setChargeModal(false)}
+                        onRequestClose={() => setChargeModal(false)}
+                        transparent
+                    >
+                        <View style={styles.chargeModalContainer}>
+                            <View style={styles.chargeModalStyle}>
+                                <Text>PLEASE WAIT</Text>
+                                <Text>DO NOT UNPLUG  DEVICE</Text>
+                                <Text>MAKE SURE DEVICE IS TURNED ON</Text>
+                            </View>
+                        </View>
+                    </Modal>
+                } */}
                 {showGateway ? (
                     <Modal
                         visible={showGateway}
@@ -214,7 +267,7 @@ const HomeScreen = (props) => {
                 <View>
                     <ProgressBar
                         progress={batteryLevel/100}
-                        color={'#59C7EA'}
+                        color={ batteryLevel < 30 ? '#FF2414' : 30 <= batteryLevel < 50  ? '#59C7EA' : '#59C7EA'}
                         style={styles.batteryProgress}
                     />
                 </View>
@@ -337,11 +390,29 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0,
     },
-        wbHead: {
+    wbHead: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#f9f9f9',
         zIndex: 25,
         elevation: 2,
     },
+    // chargeModalContainer: {
+    //     width: Dimensions.get('window').width,
+    //     height: Dimensions.get('window').height,
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    //     opacity: 0.5,
+    //     backgroundColor: '#C9FFD5',
+    //     zIndex: 10,
+    // },
+    // chargeModalStyle: {
+    //     width: Dimensions.get('window').width - 60,
+    //     height: 200,
+    //     backgroundColor: '#79FF61',
+    //     borderRadius: 20,
+    //     zIndex: 10,
+    //     alignContent: 'center',
+    //     justifyContent: 'center'
+    // }
 })
