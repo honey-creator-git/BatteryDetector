@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FlashMessage from "react-native-flash-message";
+import { getLanguages } from 'react-native-i18n';
 
 import AuthenticationScreen from './src/screens/AuthenticationScreen';
 import HomeScreen from './src/screens/HomeScreen';
@@ -17,9 +19,19 @@ import HistoryScreen from './src/screens/Admin/HistoryScreen';
 import CardInfoScreen from './src/screens/CardInfoScreen';
 import ConnectionStateScreen from './src/screens/ConnectionState';
 
+import { languageActions } from './redux/actions/languageAction';
+
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        getLanguages().then(languages => {
+            // console.log(languages[0]); // ['en-US', 'en']
+            const languageCode = languages[0].split("-")[0];
+            dispatch(languageActions.setLanguage(languageCode));
+        });
+    }, []);
     return (
         <NavigationContainer>
             <FlashMessage 

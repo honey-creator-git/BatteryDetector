@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, Switch, Image, ScrollView, StyleSheet, Di
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft, faPlus, faPen, faTrash, faXmark, faSearch, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { Searchbar } from 'react-native-paper';
+import I18n from './../../../i18n/i18n';
 
 const ChargeSearch = (props) => {
     const [chargeSearch, setChargeSearch] = useState('');
@@ -52,10 +53,10 @@ const ChargeSearch = (props) => {
             }
             
             if(props.route.params.update == "success") {
-                alert("Charge has been updated successfully!");
+                alert(I18n.t('chargeUpdate'));
             }
             if(props.route.params.addCharge == true) {
-                alert("Charge has been added successfully!");
+                alert(I18n.t('chargeAdd'));
             }
         }
     }, [props.route.params]);
@@ -70,10 +71,10 @@ const ChargeSearch = (props) => {
                         <TouchableOpacity><View style={styles.btnItem}><FontAwesomeIcon icon={faTrash} size={15} color={'#000000'} /></View></TouchableOpacity>
                     </View>
                 </View>
-                <View style={[styles.goBack, {marginTop: 20}]}><Text style={styles.chargePlacesText}>Charge places</Text></View>
+                <View style={[styles.goBack, {marginTop: 20}]}><Text style={styles.chargePlacesText}>{I18n.t('chargePlaces')}</Text></View>
                 <View style={styles.chargeSearch}>
                     <Searchbar
-                        placeholder="Search"
+                        placeholder={I18n.t('search')}
                         onChangeText={chargeSearch => handleSearch(chargeSearch)}
                         value={chargeSearch}
                         icon={() => <FontAwesomeIcon icon={faSearch} size={15} color={'#BDBDBD'} />}

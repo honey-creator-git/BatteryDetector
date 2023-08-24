@@ -10,6 +10,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import RoundButton from '../components/CustomButton';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { chargeActions } from '../../redux/actions/chargeActions';
+import I18n from './../../i18n/i18n';
 
 var BatteryManager = NativeModules.BatteryManager;
 
@@ -38,7 +39,7 @@ const HomeScreen = (props) => {
     const submitPayment = () => {
         // props.navigation.navigate('Payment');
         if (selectedCharge === null) {
-            alert("Please select a charge.");
+            alert(I18n.t('selectCharge'));
         } else  {
             setShowGateway(true)
         }
@@ -74,7 +75,7 @@ const HomeScreen = (props) => {
             // setChargeModal(false);
             props.navigation.navigate("ConnectoinState");
         } else {
-            alert("\nPLEASE WAIT\n\nDO NOT UNPLUG DEVICE\n\nMAKE SURE DEVICE IS TURNED ON");
+            alert("\n" + I18n.t('wait') + "\n\n" + I18n.t('unPlug') + "\n\n" + I18n.t('deviceTurn'));
             setLoading(true);
             for(let i = 0; i < 101; i++) {
                 setProgress(i);
@@ -101,13 +102,13 @@ const HomeScreen = (props) => {
         //     setShowGateway(true);
         // }
         if (batteryLevel < 30) {
-            alert("\nBattery is Low!\n\nCONNECT CHARGE TO YOUR DEVICE.")
+            alert("\n" + I18n.t('batteryLow') + "!\n\n" + I18n.t('connectCharge'))
         }
     }
     useEffect(() => {
         setTimeout(() => {
             if(batteryLevel < 30) {
-                alert("\nBattery is Low!\n\nCONNECT CHARGE TO YOUR DEVICE.")
+                alert("\n" + I18n.t('batteryLow') + "!\n\n" + I18n.t('connectCharge'))
             }
         }, 500);
         BatteryManager.updateBatteryLevel(function(info){
@@ -136,9 +137,9 @@ const HomeScreen = (props) => {
 
         let payment = JSON.parse(data);
         if (payment.status === "COMPLETED") {
-            alert("PAYMENT MADE SUCCESSFULLY");
+            alert(I18n.t('paymentSuccess'));
         } else {
-            alert("PAYMENT FAILED. PLEASE TRY AGAIN");
+            alert(I18n.t('paymentFailed'));
         }
     }
     const handleNormalCharge = () => {
@@ -165,8 +166,8 @@ const HomeScreen = (props) => {
                 <View style={styles.goBack}>
                     <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
                 </View>
-                <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.homeText}>Home</Text></View>
-                <View style={[styles.goBack, {marginTop: 5}]}><Text style={styles.selectChargeText}>Select Charge place</Text></View>
+                <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.homeText}>{I18n.t('home')}</Text></View>
+                <View style={[styles.goBack, {marginTop: 5}]}><Text style={styles.selectChargeText}>{I18n.t('selectChargePlace')}</Text></View>
                 <View style={[styles.goBack, {marginTop: 15, flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}]}>
                     { chargeItems.length != 0 && <SelectDropdown
                         searchPlaceHolder={'Select a charge'}
@@ -253,9 +254,9 @@ const HomeScreen = (props) => {
                 ) : null}
                 <View style={styles.divider}></View>
                 <View style={[styles.batteryStatusHeader, {marginTop: 40}]}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.batteryTitle}>Battery Status:</Text><Text style={[styles.batteryTitle, {marginLeft: 5}]}>{batteryLevel}%</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.batteryTitle}>{I18n.t('batterySatus')}:</Text><Text style={[styles.batteryTitle, {marginLeft: 5}]}>{batteryLevel}%</Text></View>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-                        <Text style={styles.automation}>Automation</Text>
+                        <Text style={styles.automation}>{I18n.t('automation')}</Text>
                         <Switch
                             trackColor={'#D7F2FA'}
                             thumbColor={'#59C7EA'}
@@ -276,20 +277,20 @@ const HomeScreen = (props) => {
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.price}>Price:</Text><Text style={[styles.price, {marginLeft: 5}]}>$1</Text></View>
                 </View> */}
                 <View style={[styles.batteryStatusHeader, {marginTop: 40}]}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.batteryTitle}>Normal Charge:</Text><Text style={[styles.batteryTitle, {marginLeft: 5}]}>$1</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.batteryTitle}>{I18n.t('normalCharge')}:</Text><Text style={[styles.batteryTitle, {marginLeft: 5}]}>$1</Text></View>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                         <RadioButton value={normalCharge} status={ normalCharge === true ? 'checked' : 'unchecked' } onPress={() => handleNormalCharge()} color='#59C7EA' />
                     </View>
                 </View>
                 <View style={[styles.batteryStatusHeader, {marginTop: 40}]}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.batteryTitle}>Fast Charge:</Text><Text style={[styles.batteryTitle, {marginLeft: 5}]}>$2</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.batteryTitle}>{I18n.t('fastCharge')}:</Text><Text style={[styles.batteryTitle, {marginLeft: 5}]}>$2</Text></View>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                         <RadioButton value={fastCharge} status={ fastCharge === true ? 'checked' : 'unchecked' } onPress={() => handleFastCharge()} color='#59C7EA' />
                     </View>
                 </View>
                 <View style={styles.divider}></View>
                 <View style={styles.payBtn}>
-                    <RoundButton title={'Pay Now'} onPress={() => submitPayment()} />
+                    <RoundButton title={I18n.t('payNow')} onPress={() => submitPayment()} />
                 </View>
             </View>
         </ScrollView>

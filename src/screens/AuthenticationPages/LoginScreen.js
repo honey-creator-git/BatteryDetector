@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { StyleSheet, View, Text, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
 import { Input, CheckBox } from 'react-native-elements';
 import { showMessage } from "react-native-flash-message";
@@ -9,6 +9,7 @@ import RoundButton from '../../components/CustomButton';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import Images from '../../assets/Images';
 import { userActions } from '../../../redux/actions/userActions';
+import I18n from './../../../i18n/i18n';
 
 const LoginScreen = (props) => {
     const dispatch = useDispatch();
@@ -18,6 +19,8 @@ const LoginScreen = (props) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [progress, setProgress] = useState(0);
     const [isModalVisible, setModalVisible] = useState(false);
+    const languageCode = useSelector((state) => state.language['languageCode']);
+    console.log("Language Code => ", languageCode);
     const handleCheckboxChange = () => {
         if(selectedIndex === 1) setSelectedIndex(0)
         else setSelectedIndex(1)
@@ -83,7 +86,7 @@ const LoginScreen = (props) => {
                 </Modal> */}
                 <ScrollView>
                     <View style={styles.loginTitle}>
-                        <Text style={styles.loginText}>Login 👋</Text>
+                        <Text style={styles.loginText}>{I18n.t('loginTitle')} 👋</Text>
                     </View>
                     <View style={styles.inputContainer}>
                         <Input
@@ -93,7 +96,7 @@ const LoginScreen = (props) => {
                             underlineColorAndroid={'transparent'}
                             autoCapitalize={"none"}
                             keyboardType={'email-address'}
-                            placeholder='Email'
+                            placeholder={I18n.t('email')}
                             placeholderTextColor={'#97999B'}
                             onChangeText={(text) => {setEmail(text)}}
                             onSubmitEditing={() => {}}
@@ -104,7 +107,7 @@ const LoginScreen = (props) => {
                             containerStyle={{width: '100%'}}
                             inputContainerStyle={styles.inputContainerStylePassword}
                             inputStyle={styles.inputStyle}
-                            placeholder='Password'
+                            placeholder={I18n.t('password')}
                             placeholderTextColor={'#97999B'}
                             onChangeText={(text) => {setPassword(text)}}
                             ref={ref => {}}
@@ -120,11 +123,11 @@ const LoginScreen = (props) => {
                             <TouchableOpacity 
                                 onPress={() => {}}
                             >
-                                <Text style={styles.forgetTxt}>Forgot password?</Text>
+                                <Text style={styles.forgetTxt}>{I18n.t('forgotPassword')}?</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.LoginBtn}>
-                            <RoundButton title={'Login'} onPress={() => submitLogin()} />
+                            <RoundButton title={I18n.t('loginTitle')} onPress={() => submitLogin()} />
                         </View>
                         <View style={styles.orloginWithContainer}>
                             <TouchableOpacity style={styles.orloginWithContainer}>
@@ -132,7 +135,7 @@ const LoginScreen = (props) => {
                                     source={Images.google_icon}
                                     resizeMode='stretch'
                                 />
-                                <View style={{marginLeft: 10}}><Text style={styles.socialLoginText}>Login with Google</Text></View>
+                                <View style={{marginLeft: 10}}><Text style={styles.socialLoginText}>{I18n.t('loginWithGoogle')}</Text></View>
                             </TouchableOpacity>
                         </View>
                     </View>

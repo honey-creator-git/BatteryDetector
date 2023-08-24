@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Animated, TouchableOpacity, View, Text, Dimensions } from "react-native";
+import I18n from './../../i18n/i18n';
 
 const MyTabBar = ({ navigationState, navigation, position }) => {
     const [ tab, setTab ] = useState(true);
@@ -24,17 +25,17 @@ const MyTabBar = ({ navigationState, navigation, position }) => {
             <TouchableOpacity onPress={() => handleOnPress('Login')}>
                 {
                     tab == true ?
-                    <View style={[styles.buttonContainer, styles.tabBgColorWh]}><Text style={styles.buttonText}>Login</Text></View>
+                    <View style={[styles.buttonContainer, styles.tabBgColorWh]}><Text style={styles.buttonText}>{I18n.t('tabLogin')}</Text></View>
                     :
-                    <View style={[styles.buttonContainer, styles.tabBgColorTr]}><Text style={styles.buttonText}>Login</Text></View>
+                    <View style={[styles.buttonContainer, styles.tabBgColorTr]}><Text style={styles.buttonText}>{I18n.t('tabLogin')}</Text></View>
                 }
             </TouchableOpacity>
             <TouchableOpacity onPress={() => handleOnPress('Signup')}>
                 {
                     tab == true ?
-                    <View style={[styles.buttonContainer, styles.tabBgColorTr]}><Text style={styles.buttonText}>Signup</Text></View>   
+                    <View style={[styles.buttonContainer, styles.tabBgColorTr]}><Text style={styles.buttonText}>{I18n.t('tabSignup')}</Text></View>   
                     :
-                    <View style={[styles.buttonContainer, styles.tabBgColorWh]}><Text style={styles.buttonText}>Signup</Text></View>   
+                    <View style={[styles.buttonContainer, styles.tabBgColorWh]}><Text style={styles.buttonText}>{I18n.t('tabSignup')}</Text></View>   
                 }
             </TouchableOpacity> 
         </View>

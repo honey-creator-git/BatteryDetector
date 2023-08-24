@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, View, Text } from 'react-native';
+import I18n from './../../i18n/i18n';
 
 const Checkbox = ({
     id,
@@ -24,7 +25,7 @@ const Checkbox = ({
                     onCheckboxChange(id);
                 }}></TouchableOpacity>
             )}
-            <View><Text style={{fontSize: 14, color: '#8D9092'}}>Remember</Text></View>
+            <View><Text style={{fontSize: 14, color: '#8D9092'}}>{I18n.t('remember')}</Text></View>
         </View>
     );
 };

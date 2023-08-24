@@ -9,6 +9,7 @@ import Modal from "react-native-modal";
 import RoundButton from '../components/CustomButton';
 import Images from '../assets/Images';
 import { userActions } from '../../redux/actions/userActions';
+import I18n from './../../i18n/i18n';
 
 const ConnectionStateScreen = (props) => {
     const dispatch = useDispatch();
@@ -29,15 +30,15 @@ const ConnectionStateScreen = (props) => {
         <ScrollView>
             <Modal isVisible={isModalVisible}>
                 <View style={styles.modalContainer}>
-                    <Text style={styles.modalTextStyle}>Device Charged 100% successfully!</Text>
+                    <Text style={styles.modalTextStyle}>{I18n.t('chargedFull')}</Text>
                 </View>
             </Modal>
             <View style={styles.paymentScreenContainer}>
                 <View style={styles.goBack}>
                     <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
                 </View>
-                <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.connectionStateText}>Connection station</Text></View>
-                <View style={[styles.goBack, {marginTop: 100}]}><Text style={styles.completionText}>Completed</Text></View>
+                <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.connectionStateText}>{I18n.t('connectionState')}</Text></View>
+                <View style={[styles.goBack, {marginTop: 100}]}><Text style={styles.completionText}>{I18n.t('completion')}</Text></View>
                 <View>
                     <ProgressBar
                         progress={1}
@@ -46,7 +47,7 @@ const ConnectionStateScreen = (props) => {
                     />
                 </View>
                 <View style={styles.connectionStateConfirm}>
-                    <RoundButton title={'End'} onPress={() => handleConnectionConfirm()} />
+                    <RoundButton title={I18n.t('end')} onPress={() => handleConnectionConfirm()} />
                 </View>
             </View>
         </ScrollView>

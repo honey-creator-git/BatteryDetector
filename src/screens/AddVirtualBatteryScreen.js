@@ -4,6 +4,7 @@ import { Input } from 'react-native-elements';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import RoundButton from '../components/CustomButton';
+import I18n from './../../i18n/i18n';
 
 const AddVirtualBatteryScreen = (props) => {
     const [name, setName] = useState('');
@@ -20,22 +21,22 @@ const AddVirtualBatteryScreen = (props) => {
                 <View style={styles.goBack}>
                     <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
                 </View>
-                <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.selecitonText}>Add Virtual Battery</Text></View>
+                <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.selecitonText}>{I18n.t('addVirtualBattery')}</Text></View>
                 <View style={[styles.chargeAddItemStyle, { marginTop: 100 }]}>
-                        <Text style={styles.nameText}>Virtual Battery Name:</Text>
+                        <Text style={styles.nameText}>{I18n.t('virtualBatteryName')}</Text>
                         <Input
                             defaultValue=''
                             inputContainerStyle={styles.inputName}
                             inputStyle={styles.inputNameStyle}
                             underlineColorAndroid={'transparent'}
                             autoCapitalize={"none"}
-                            placeholder='Name'
+                            placeholder={I18n.t('name')}
                             placeholderTextColor={'#97999B'}
                             onChangeText={(text) => {setName(text)}}
                         />
                 </View>
                 <View style={[styles.chargeAddItemStyle, { marginTop: 30 }]}>
-                    <Text style={styles.nameText}>Virtual Battery IP Address:</Text>
+                    <Text style={styles.nameText}>{I18n.t('virtualBatteryIpAddress')}</Text>
                     <Input
                         defaultValue=''
                         inputContainerStyle={styles.inputName}
@@ -48,7 +49,7 @@ const AddVirtualBatteryScreen = (props) => {
                     />
                 </View>
                 <View style={styles.saveBtn}>
-                    <RoundButton title={'Save'} onPress={() => saveVirtualBattery()} />
+                    <RoundButton title={I18n.t('save')} onPress={() => saveVirtualBattery()} />
                 </View>
             </View>
         </ScrollView>

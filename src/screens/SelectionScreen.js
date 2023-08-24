@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { RadioButton } from 'react-native-paper';
 import RoundButton from '../components/CustomButton';
+import I18n from './../../i18n/i18n';
 
 const SelectionScreen = (props) => {
     const [batteryRecharge, setBatteryRecharge] = useState(true);
@@ -65,35 +66,35 @@ const SelectionScreen = (props) => {
                 <View style={styles.goBack}>
                     <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
                 </View>
-                <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.selecitonText}>Selection</Text></View>
-                <View style={[styles.goBack, {marginTop: 5}]}><Text style={styles.selectOptionText}>Select one of the options</Text></View>
+                <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.selecitonText}>{I18n.t('selection')}</Text></View>
+                <View style={[styles.goBack, {marginTop: 5}]}><Text style={styles.selectOptionText}>{I18n.t('selectOptions')}</Text></View>
                 <View style={[styles.optionChooseHeader, {marginTop: 40}]}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>Battery Recharge</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>{I18n.t('batteryRecharge')}</Text></View>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                         <RadioButton value={batteryRecharge} status={ batteryRecharge === true ? 'checked' : 'unchecked' } onPress={() => handleBatteryRecharge()} color='#59C7EA' />
                     </View>
                 </View>
                 <View style={[styles.optionChooseHeader, {marginTop: 40}]}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>Power On</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>{I18n.t('powerOn')}</Text></View>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                         <RadioButton value={powerOn} status={ powerOn === true ? 'checked' : 'unchecked' } onPress={() => handlePowerOn()} color='#59C7EA' />
                     </View>
                 </View>
                 <View style={[styles.optionChooseHeader, {marginTop: 40}]}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>Virtual Battery</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>{I18n.t('virtualBattery')}</Text></View>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                         <RadioButton value={virtualBattery} status={ virtualBattery === true ? 'checked' : 'unchecked' } onPress={() => handleVirtualBattery()} color='#59C7EA' />
                     </View>
                 </View>
                 <View style={[styles.optionChooseHeader, {marginTop: 40}]}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>UPS</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>{I18n.t('ups')}</Text></View>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                         <RadioButton value={ups} status={ ups === true ? 'checked' : 'unchecked' } onPress={() => handleUPS()} color='#59C7EA' />
                     </View>
                 </View>
                 <View style={styles.divider}></View>
                 <View style={styles.payBtn}>
-                    <RoundButton title={'Next'} onPress={() => handleNextForSelection()} />
+                    <RoundButton title={I18n.t('next')} onPress={() => handleNextForSelection()} />
                 </View>
             </View>
         </ScrollView>

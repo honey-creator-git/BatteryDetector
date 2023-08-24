@@ -9,6 +9,7 @@ import MapView , { Marker } from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import RoundButton from '../../components/CustomButton';
 import { useColorSchemeListener } from '../../../utils/useColorSchemeListener'
+import I18n from './../../../i18n/i18n';
 
 const MapScreen = (props) => {
     const colorScheme = useColorSchemeListener();
@@ -37,7 +38,7 @@ const MapScreen = (props) => {
     }
     const viewHistory = () => {
         if (defaultUsersLength == 0) {
-            alert("No Users for this battery!");
+            alert(I18n.t('noUser'));
         } else {
             props.navigation.navigate('History', { ip: ip, batteryUsers, batteryUsers });
         }        
@@ -88,7 +89,7 @@ const MapScreen = (props) => {
                     <TouchableOpacity onPress={() => handleGoBack()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
                 </View>
                 <View style={[styles.mapShowContainerStyle, { marginTop: 20 }]}>
-                    <Text style={styles.mapText}>Map</Text>
+                    <Text style={styles.mapText}>{I18n.t('map')}</Text>
                     <View style={styles.mapStyle}>
                         <MapView 
                             useRef={mapRef}
@@ -108,11 +109,11 @@ const MapScreen = (props) => {
                     </View>
                 </View>
                 <View style={[styles.chargeContainer, {position: 'absolute', top: 500}]}>
-                    <View><Text style={styles.chargeText}>Charge</Text></View>
+                    <View><Text style={styles.chargeText}>{I18n.t('charge')}</Text></View>
                     <RadioButton value={charge} status={ charge === 'charged' ? 'checked' : 'unchecked' } onPress={() => handleCharge()} color='#59C7EA' />
                 </View>
                 <View style={[styles.chargeContainer, {marginTop: 20, position: 'absolute', top: 550}]}>
-                    <View><Text style={styles.chargeText}>Users</Text></View>
+                    <View><Text style={styles.chargeText}>{I18n.t('users')}</Text></View>
                     <Input
                         defaultValue={defaultUsersLength.toString()}
                         inputContainerStyle={styles.inputUsers}
@@ -126,7 +127,7 @@ const MapScreen = (props) => {
                     />
                 </View>
                 <View style={[styles.historyBtn, {position: 'absolute', top: 620}]}>
-                    <RoundButton title={'View History'} onPress={() => viewHistory()} />
+                    <RoundButton title={I18n.t('viewHistory')} onPress={() => viewHistory()} />
                 </View>
             </View>
         </KeyboardAwareScrollView>

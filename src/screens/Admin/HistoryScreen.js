@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import I18n from './../../../i18n/i18n';
 
 const HistoryScreen = (props) => {
     // const history = [
@@ -27,7 +28,7 @@ const HistoryScreen = (props) => {
                 <TouchableOpacity onPress={() => handleGoBack()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
             </View>
             <View style={[styles.historyContainerStyle, { marginTop: 20 }]}>
-                <Text style={styles.historyText}>History</Text>
+                <Text style={styles.historyText}>{I18n.t('history')}</Text>
             </View>
             <View style={styles.historyListStyle}>
                 <ScrollView contentContainerStyle={styles.scrollStyle}>
@@ -41,7 +42,7 @@ const HistoryScreen = (props) => {
                                         <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start'}}><Text style={styles.itemNameText}>{item["firstName"]}</Text><Text style={[styles.itemNameText, {marginLeft: 5}]}>{item["lastName"].charAt(0)}.</Text></View>
                                     </View>
                                     <View style={styles.itemRight}>
-                                        <View style={{alignSelf: 'center'}}><Text style={styles.totalText}>TOTAL</Text></View>
+                                        <View style={{alignSelf: 'center'}}><Text style={styles.totalText}>{I18n.t('total')}</Text></View>
                                         <View style={styles.priceContainer}><Text style={[styles.priceText, { marginRight: 3 }]}>$</Text><Text style={styles.priceText}>1</Text></View>
                                     </View>
                                 </View>

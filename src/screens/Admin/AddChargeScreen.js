@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { chargeActions } from '../../../redux/actions/chargeActions';
+import I18n from './../../../i18n/i18n';
 
 const AddCharge = (props) => {
     const dispatch = useDispatch();
@@ -79,7 +80,7 @@ const AddCharge = (props) => {
                     <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
                 </View>
                 <View style={[styles.chargeAddItemStyle, { marginTop: 20 }]}>
-                        <Text style={styles.nameText}>Name</Text>
+                        <Text style={styles.nameText}>{I18n.t('name')}</Text>
                         <Input
                             defaultValue={name}
                             inputContainerStyle={styles.inputName}
@@ -92,7 +93,7 @@ const AddCharge = (props) => {
                         />
                 </View>
                 <View style={[styles.chargeAddItemStyle, { marginTop: 30 }]}>
-                        <Text style={styles.nameText}>IP Address</Text>
+                        <Text style={styles.nameText}>{I18n.t('ipAddress')}</Text>
                         <Input
                             defaultValue={ipAddress}
                             inputContainerStyle={styles.inputName}
@@ -105,7 +106,7 @@ const AddCharge = (props) => {
                         />
                 </View>
                 <View style={[styles.chargeAddItemStyle, { marginTop: 30 }]}>
-                        <Text style={styles.nameText}>Lat , Lon</Text>
+                        <Text style={styles.nameText}>{I18n.t('latLon')}</Text>
                         <Input
                             defaultValue={latLon}
                             inputContainerStyle={styles.inputName}
@@ -119,7 +120,7 @@ const AddCharge = (props) => {
                         />
                 </View>
                 <View style={styles.saveBtn}>
-                    <RoundButton title={'Save'} onPress={() => saveCharge(props.route.params.edit)} />
+                    <RoundButton title={I18n.t('save')} onPress={() => saveCharge(props.route.params.edit)} />
                 </View>
             </View>
         </KeyboardAwareScrollView>

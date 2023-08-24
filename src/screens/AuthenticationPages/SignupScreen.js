@@ -10,6 +10,7 @@ import RoundButton from '../../components/CustomButton';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import Images from '../../assets/Images';
 import { userActions } from '../../../redux/actions/userActions';
+import I18n  from './../../../i18n/i18n';
 
 const SignupScreen = (props) => {
     const dispatch = useDispatch();
@@ -116,7 +117,7 @@ const SignupScreen = (props) => {
                     </View>
                 </Modal> */}
                 <View style={styles.loginTitle}>
-                    <Text style={styles.loginText}>Sign Up 👋</Text>
+                    <Text style={styles.loginText}>{I18n.t('signupTitle')} 👋</Text>
                 </View>
                 <View style={styles.inputContainer}>
                     <Input
@@ -125,7 +126,7 @@ const SignupScreen = (props) => {
                         inputStyle={styles.inputStyle}
                         underlineColorAndroid={'transparent'}
                         autoCapitalize={"none"}
-                        placeholder='First Name'
+                        placeholder={I18n.t('firstName')}
                         placeholderTextColor={'#97999B'}
                         onChangeText={(text) => {setFirstName(text)}}
                     />
@@ -135,7 +136,7 @@ const SignupScreen = (props) => {
                         inputStyle={styles.inputStyle}
                         underlineColorAndroid={'transparent'}
                         autoCapitalize={"none"}
-                        placeholder='Last Name'
+                        placeholder={I18n.t('lastName')}
                         placeholderTextColor={'#97999B'}
                         onChangeText={(text) => {setLastName(text)}}
                     />
@@ -146,7 +147,7 @@ const SignupScreen = (props) => {
                         underlineColorAndroid={'transparent'}
                         autoCapitalize={"none"}
                         keyboardType={'email-address'}
-                        placeholder='Email'
+                        placeholder={I18n.t('email')}
                         placeholderTextColor={'#97999B'}
                         onChangeText={(text) => {setEmail(text)}}
                         onSubmitEditing={() => {}}
@@ -157,7 +158,7 @@ const SignupScreen = (props) => {
                         containerStyle={{width: '100%'}}
                         inputContainerStyle={styles.inputContainerStylePassword}
                         inputStyle={styles.inputStyle}
-                        placeholder='Password'
+                        placeholder={I18n.t('password')}
                         placeholderTextColor={'#97999B'}
                         onChangeText={(text) => {setPassword(text)}}
                         ref={ref => {}}
@@ -168,13 +169,13 @@ const SignupScreen = (props) => {
                         containerStyle={{width: '100%'}}
                         inputContainerStyle={styles.inputContainerStylePassword}
                         inputStyle={styles.inputStyle}
-                        placeholder='Confirm Password'
+                        placeholder={I18n.t('confirmPassword')}
                         placeholderTextColor={'#97999B'}
                         onChangeText={(text) => {setConfirmPassword(text)}}
                         ref={ref => {}}
                     />
                     <View style={styles.LoginBtn}>
-                        <RoundButton title={'Sign Up'} onPress={() => submitRegister()} />
+                        <RoundButton title={I18n.t('tabSignup')} onPress={() => submitRegister()} />
                     </View>
                     <View style={styles.orloginWithContainer}>
                         <TouchableOpacity style={styles.orloginWithContainer}>
@@ -183,7 +184,7 @@ const SignupScreen = (props) => {
                                 source={Images.google_icon}
                                 resizeMode='stretch'
                             />
-                            <View style={{marginLeft: 10}}><Text style={styles.socialLoginText}>Login with Google</Text></View>
+                            <View style={{marginLeft: 10}}><Text style={styles.socialLoginText}>{I18n.t('loginWithGoogle')}</Text></View>
                         </TouchableOpacity>
                     </View>
                 </View>

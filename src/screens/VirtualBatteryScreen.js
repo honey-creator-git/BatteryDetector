@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { RadioButton } from 'react-native-paper';
 import RoundButton from '../components/CustomButton';
+import I18n from './../../i18n/i18n';
 
 const VirtualBatteryScreen = (props) => {
     const [batteryRecharge, setBatteryRecharge] = useState(true);
@@ -61,35 +62,35 @@ const VirtualBatteryScreen = (props) => {
                 <View style={styles.goBack}>
                     <TouchableOpacity onPress={() => handleGoBak()}><FontAwesomeIcon icon={faArrowLeft} size={40} style={{ color: "#000000" }} /></TouchableOpacity>
                 </View>
-                <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.selecitonText}>Battery Size</Text></View>
-                <View style={[styles.goBack, {marginTop: 5}]}><Text style={styles.selectOptionText}>Select one of the virtual battery sizes:</Text></View>
+                <View style={[styles.goBack, {marginTop: 10}]}><Text style={styles.selecitonText}>{I18n.t('batterySize')}</Text></View>
+                <View style={[styles.goBack, {marginTop: 5}]}><Text style={styles.selectOptionText}>{I18n.t('selectVirtualBatterySize')}:</Text></View>
                 <View style={[styles.optionChooseHeader, {marginTop: 40}]}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>50,000 MILLI AMP/HOUR</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>{I18n.t('firstVirtualBattery')}</Text></View>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                         <RadioButton value={batteryRecharge} status={ batteryRecharge === true ? 'checked' : 'unchecked' } onPress={() => handleBatteryRecharge()} color='#59C7EA' />
                     </View>
                 </View>
                 <View style={[styles.optionChooseHeader, {marginTop: 40}]}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>100,000 MILLI AMP/HOUR</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>{I18n.t('secondVirtualBattery')}</Text></View>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                         <RadioButton value={powerOn} status={ powerOn === true ? 'checked' : 'unchecked' } onPress={() => handlePowerOn()} color='#59C7EA' />
                     </View>
                 </View>
                 <View style={[styles.optionChooseHeader, {marginTop: 40}]}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>250,000 MILLI AMP/HOUR</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>{I18n.t('thirdVirtualBattery')}</Text></View>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                         <RadioButton value={virtualBattery} status={ virtualBattery === true ? 'checked' : 'unchecked' } onPress={() => handleVirtualBattery()} color='#59C7EA' />
                     </View>
                 </View>
                 <View style={[styles.optionChooseHeader, {marginTop: 40}]}>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>1,000,000 MILLI AMP/HOUR</Text></View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}><Text style={styles.optionTitle}>{I18n.t('fourthVirtualBattery')}</Text></View>
                     <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                         <RadioButton value={ups} status={ ups === true ? 'checked' : 'unchecked' } onPress={() => handleUPS()} color='#59C7EA' />
                     </View>
                 </View>
                 <View style={styles.divider}></View>
                 <View style={styles.payBtn}>
-                    <RoundButton title={'Next'} onPress={() => handleNextForSelection()} />
+                    <RoundButton title={I18n.t('next')} onPress={() => handleNextForSelection()} />
                 </View>
             </View>
         </ScrollView>
